@@ -32,6 +32,11 @@
   grid-area: head;
 }
 
+.article-layout > article {
+  min-width: 0;
+  width: 100%;
+}
+
 .article-toc {
   grid-area: aside;
 }
@@ -234,10 +239,11 @@
 }
 
 .prose table {
+  display: block;
+  overflow-x: auto;
   border-collapse: collapse;
   width: 100%;
   font-size: 0.9375rem;
-  min-width: 32.5rem;
 }
 
 .prose td,
