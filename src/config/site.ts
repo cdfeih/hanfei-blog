@@ -11,7 +11,7 @@ export const SITE = {
   headline: ['以架构理清复杂', '以协作推动落地'],
   /** 首页简介 */
   description:
-    'SE-MBSE 项目负责人。关注技术方案、架构设计与团队管理，记录从工程问题到产品交付的思考。',
+    'MBSE 项目负责人。关注技术方案、架构设计与团队管理，记录从工程问题到产品交付的思考。',
   /** 作者 */
   author: '韩飞',
   /** 写作昵称 */
@@ -24,8 +24,8 @@ export const SITE = {
    * 联系方式：提供真实地址后填入；为空时页面隐藏入口（规格 D11）。
    * 例如：email: 'hanfei@example.com'，github: 'https://github.com/<username>'
    */
-  email: '',
-  github: '',
+  email: '277572023@qq.com',
+  github: 'https://github.com/cdfeih',
   /**
    * 许可配置：分别声明网站代码与文章许可；留空则不在页脚宣称任何许可。
    */
