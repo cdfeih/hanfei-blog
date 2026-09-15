@@ -69,8 +69,8 @@ if (document.documentElement.dataset.page === 'home' && nav) {
       const target = a.dataset.navkey;
       const isCurrent =
         (key === 'home' && target === 'home') ||
-        (key === 'project' && target === undefined && a.getAttribute('href')?.includes('#project')) ||
-        (key === 'about' && target === undefined && a.getAttribute('href')?.includes('#about'));
+        (key === 'project' && target === 'project') ||
+        (key === 'about' && target === 'about');
       if (isCurrent) a.setAttribute('aria-current', 'true');
       else a.removeAttribute('aria-current');
     });

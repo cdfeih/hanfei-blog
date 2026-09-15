@@ -181,20 +181,37 @@ const pathname = withBase(`/notes/${d.slug}/`);
       const sections = [...tocLinks]
         .map((a) => document.getElementById(a.dataset.tocLink ?? ''))
         .filter((el): el is HTMLElement => !!el);
+      const visible = new Set<string>();
+      const setActive = (id: string): void => {
+        tocLinks.forEach((link) => {
+          const active = decodeURIComponent((link.getAttribute('href') ?? '').slice(1)) === id;
+          link.classList.toggle('current', active);
+          if (active) link.setAttribute('aria-current', 'location');
+          else link.removeAttribute('aria-current');
+        });
+      };
       const observer = new IntersectionObserver(
         (entries) => {
-          const current = entries.find((e) => e.isIntersecting);
-          if (!current) return;
-          tocLinks.forEach((link) => {
-            const active = link.getAttribute('href') === `#${current.target.id}`;
-            link.classList.toggle('current', active);
-            if (active) link.setAttribute('aria-current', 'location');
-            else link.removeAttribute('aria-current');
-          });
+          /* 维护“当前可见章节”集合：取文档顺序中最靠上的可见章节为当前章节。
+             单次 find(isIntersecting) 在章节恰好滑出判定条带时会丢高亮。 */
+          for (const entry of entries) {
+            if (entry.isIntersecting) visible.add(entry.target.id);
+            else visible.delete(entry.target.id);
+          }
+          const current = sections.find((s) => visible.has(s.id));
+          if (current) setActive(current.id);
         },
         { rootMargin: '-15% 0px -55% 0px' }
       );
       sections.forEach((s) => observer.observe(s));
+
+      /* 点击目录项立即高亮对应章节，滚动到达前先给出反馈 */
+      tocLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+          const id = decodeURIComponent((link.getAttribute('href') ?? '').slice(1));
+          if (id && document.getElementById(id)) setActive(id);
+        });
+      });
     }
 
     /* 返回列表时尽量保留来源领域（D07） */

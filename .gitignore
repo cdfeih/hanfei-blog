@@ -3,6 +3,7 @@ node_modules/
 dist/
 .astro/
 .pnpm/
+.browsers/
 
 # 日志与系统文件
 *.log
