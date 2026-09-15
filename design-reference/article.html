@@ -1,0 +1,24 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="从变化的原因、规则的归属和协作成本出发，思考复杂系统的模块边界。"><meta name="robots" content="noindex"><title>复杂系统的模块边界，应该从哪里划起？ · 韩飞</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css"><script src="site.js" defer></script></head>
+<body><a class="skip" href="#main">跳至正文</a><header class="header"><div class="wrap header-inner"><a class="brand" href="index.html" aria-label="韩飞，首页"><span class="monogram">HF<span>.</span></span><span>韩飞<span class="brand-sub">工程与架构</span></span></a><nav aria-label="主导航"><a href="index.html">首页</a><a class="active" href="index.html#writing">工程笔记</a><a href="index.html#project">项目实践</a><a href="index.html#about">关于</a></nav><button class="theme-toggle" type="button" aria-label="切换深色模式" aria-pressed="false">◐ <span>外观</span></button></div></header>
+<main id="main" class="wrap article-shell"><div class="breadcrumb"><a href="index.html#writing">← 工程笔记</a><span> / 架构设计</span></div><div class="article-layout"><article><header class="article-head"><div class="article-meta"><span class="category">架构设计</span><span>方法笔记 / 001</span></div><h1>复杂系统的模块边界，<br>应该从哪里划起？</h1><p class="dek">目录可以很整齐，职责仍然可能纠缠在一起。判断边界是否合理，需要回到变化的原因、业务规则的归属，以及团队协作的成本。</p><div class="byline"><span class="avatar">飞</span><span>韩飞</span><span>·</span><span>内容草稿</span><span>·</span><span>架构与工程实践</span></div></header>
+<aside class="draft-note">本文为网站原型的示例草稿，采用简化的建模编辑场景说明通用方法。具体项目决策与验证结果将在正式写作时补充。</aside>
+<div class="prose"><p>一个复杂平台通常同时包含界面交互、业务规则、数据存储与外部系统集成。如果只按页面划分模块，同一条规则可能出现在多个地方；如果只按技术层划分，一次业务变化又可能需要跨越很多目录。</p><p>模块边界要回答一个具体问题：当某件事发生变化时，谁应该负责理解它、实现它，并验证它？</p>
+<h2 id="change">01　先找变化的原因</h2><p>以建模编辑器中的“重命名元素”为例，输入框样式、命名约束、存储协议和协同通知，都可能随着不同原因发生变化。</p><div class="table-wrap"><table><thead><tr><th>变化</th><th>主要关注点</th><th>建议归属</th></tr></thead><tbody><tr><td>输入框增加即时提示</td><td>用户反馈与交互</td><td>界面层</td></tr><tr><td>同一命名空间禁止重名</td><td>命名规则的一致性</td><td>领域规则</td></tr><tr><td>更新后触发关联操作</td><td>步骤编排与失败处理</td><td>应用层</td></tr><tr><td>存储或通信方式改变</td><td>外部依赖的适配</td><td>基础设施</td></tr></tbody></table></div><p>把变化的原因列出来，比立即画一张庞大的模块图更容易发现问题。同一个规则如果需要在不同入口反复实现，就是值得检查的信号。</p>
+<h2 id="ownership">02　让规则有明确的归属</h2><p>用户可能通过属性面板、模型树或导入功能触发重命名。界面可以提供提前校验，但最终的业务约束需要有统一的执行入口。</p><blockquote><p>一个模块的边界，应当让团队清楚：规则在哪里，以及修改它需要承担什么责任。</p></blockquote><div class="boundary-diagram" role="img" aria-label="建议依赖方向：界面调用应用层，应用层调用领域规则；基础设施通过接口接入应用层"><div>界面交互<small>提交用户意图 →</small></div><div>应用编排<small>调用领域规则 →</small></div><div>领域规则<small>维护业务约束</small></div></div><p class="figure-caption">图 1 · 简化的职责划分，基础设施通过接口接入应用层。</p><p>这并不意味着每一层都必须成为一个独立部署的服务。代码职责和部署形态可以分别决策。对于需要频繁一起交付的功能，清晰的模块化结构往往是一个更容易验证的起点。</p>
+<h2 id="contract">03　把边界写成可讨论的契约</h2><p>讨论模块时，除了命名和目录，更需要说明输入、输出、错误和副作用。下面用一个示意接口表达重命名操作的边界：</p><div class="code-block"><div class="code-top"><span>rename-element.ts · 示意接口</span><button type="button" class="copy-code" aria-label="复制示意代码" aria-live="polite">复制</button></div><pre><code><span class="kw">type</span> RenameElementCommand = {
+  elementId: string;
+  nextName: string;
+  expectedVersion: number;
+};
+
+<span class="kw">type</span> RenameResult =
+  | { ok: true; version: number }
+  | { ok: false; reason: <span class="kw">'conflict' | 'invalid-name'</span> };
+
+<span class="comment">// 约定操作结果；具体事务与通知策略另行定义。</span>
+<span class="kw">interface</span> RenameElement {
+  execute(command: RenameElementCommand): Promise&lt;RenameResult&gt;;
+}</code></pre></div><p>版本字段用于表达调用者看到的数据版本。实现时仍需要明确检查与更新的原子性、冲突时的反馈方式，以及操作成功与消息通知之间的关系。接口能够帮助暴露这些问题，但无法自动解决它们。</p>
+<h2 id="delivery">04　用一次真实变化验证设计</h2><p>选择一个跨入口的需求，沿着实际执行路径检查边界：</p><ol><li><strong>规则是否一致：</strong>从模型树和属性面板操作，是否遵守相同的命名约束？</li><li><strong>变化是否集中：</strong>调整约束时，是否需要同步修改多个副本？</li><li><strong>失败是否可解释：</strong>当版本冲突或持久化失败时，用户能否理解结果？</li><li><strong>协作是否清楚：</strong>谁修改契约，谁验证调用方，谁负责集成？</li></ol><p>这些检查可以转化为验收场景。架构评审也就有了具体依据：检查规则和操作结果，记录跨模块修改的范围，再决定是否调整边界。</p>
+<h2 id="summary">05　留下决策，也留下适用条件</h2><p>每个边界都会带来代价。更明确的接口可能增加转换代码；更细的模块可能增加协作成本。技术方案应当记录选择的原因、接受的代价，以及什么时候需要重新评估。</p><p>对于技术负责人，架构图、模块职责和团队任务应该能够相互对应。这份对应关系有助于让设计进入日常开发、评审和交付。</p><blockquote><p>从一个具体变化出发，让边界经得起实现与协作的检验。</p></blockquote></div><div class="article-bottom"><a href="index.html#writing">← 返回工程笔记</a><a href="#main">回到顶部 ↑</a></div></article>
+<aside class="toc" aria-label="文章目录"><h2>本篇目录</h2><a href="#change">01　变化的原因</a><a href="#ownership">02　规则的归属</a><a href="#contract">03　边界与契约</a><a href="#delivery">04　验证设计</a><a href="#summary">05　记录决策</a><div class="toc-note"><strong>飞的工程笔记</strong><br>从具体问题出发，记录架构、技术决策与团队交付中的思考。</div></aside></div></main><footer class="wrap footer"><span>© 2026 韩飞 · 工程与架构</span><span>记录思考，持续修正。</span><a href="index.html">返回首页 ↗</a></footer></body></html>

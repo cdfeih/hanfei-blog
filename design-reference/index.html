@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="韩飞，SE-MBSE 项目负责人。记录架构设计、技术决策和团队交付中的思考。">
+  <title>韩飞 · 工程与架构</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css">
+  <script src="site.js" defer></script>
+  <link rel="stylesheet" href="filters.css">
+</head>
+<body>
+  <a class="skip" href="#main">跳至正文</a>
+  <header class="header"><div class="wrap header-inner">
+    <a class="brand" href="index.html" aria-label="韩飞，首页"><span class="monogram">HF<span>.</span></span><span>韩飞<span class="brand-sub">工程与架构</span></span></a>
+    <nav aria-label="主导航"><a class="active" href="index.html" aria-current="page">首页</a><a href="#writing">工程笔记</a><a href="#project">项目实践</a><a href="#about">关于</a></nav>
+    <button class="theme-toggle" type="button" aria-label="切换深色模式" aria-pressed="false">◐ <span>外观</span></button>
+  </div></header>
+  <main id="main">
+    <section class="hero wrap">
+      <div class="hero-copy"><p class="eyebrow">HAN FEI / ENGINEERING NOTES</p><p class="intro">你好，我是韩飞。</p>
+        <h1>以架构理清复杂，<br>以协作推动落地<span class="blue">。</span></h1>
+        <p class="hero-description">SE-MBSE 项目负责人。关注技术方案、架构设计与团队管理，记录从工程问题到产品交付的思考。</p>
+        <div class="hero-actions"><a class="button primary" href="#writing">阅读工程笔记 <span aria-hidden="true">↗</span></a><a class="text-link" href="#about">了解我的工作 <span aria-hidden="true">→</span></a></div>
+        <div class="hero-tags"><span>架构设计</span><span>技术决策</span><span>团队交付</span></div>
+      </div>
+      <div class="architecture" aria-label="工作方法示意：问题与约束，经过架构决策与团队协作，到达产品交付，并通过反馈持续修正">
+        <div class="diagram-top"><span>从问题到交付</span><span class="mono">FIG. 01</span></div>
+        <div class="diagram-canvas"><div class="node node-input"><span class="node-index">01 / CONTEXT</span><strong>问题与约束</strong><span>目标 · 边界 · 使用场景</span></div>
+          <div class="connector" aria-hidden="true">↓</div>
+          <div class="node-pair"><div class="node"><span class="node-index">02 / DESIGN</span><strong>架构决策</strong><span>职责与技术取舍</span></div><span class="between" aria-hidden="true">↔</span><div class="node"><span class="node-index">03 / PEOPLE</span><strong>团队协作</strong><span>共识与执行节奏</span></div></div>
+          <div class="connector" aria-hidden="true">↓</div><div class="node node-output"><span class="node-index">04 / DELIVERY</span><strong>产品交付</strong><span>验证结果，持续修正</span></div>
+        </div><div class="diagram-bottom"><span class="feedback">↺ 反馈回到问题</span><span>工作方法示意</span></div>
+      </div>
+    </section>
+    <div class="focus-strip"><div class="wrap focus-inner"><span class="mono" id="focus-label">FOCUS AREAS</span><div class="focus-filters" role="group" aria-labelledby="focus-label"><button type="button" data-topic="all" aria-pressed="true" aria-controls="writing">全部笔记</button><button type="button" data-topic="modeling" aria-pressed="false" aria-controls="writing">系统建模</button><button type="button" data-topic="frontend" aria-pressed="false" aria-controls="writing">复杂前端</button><button type="button" data-topic="architecture" aria-pressed="false" aria-controls="writing">平台架构</button><button type="button" data-topic="management" aria-pressed="false" aria-controls="writing">工程管理</button></div></div></div>
+    <section class="section wrap" id="writing">
+      <div class="section-heading"><div><p class="eyebrow">01 / WRITING</p><h2>工程笔记</h2></div><p>把问题讲清楚，也把取舍留下来。</p></div>
+      <p class="filter-summary" role="status" aria-live="polite" aria-atomic="true" hidden></p><div class="writing-empty" hidden><h3>这个方向的笔记还在整理中</h3><p>可以切换其他分类，或查看全部笔记。</p><button type="button" class="text-link" data-reset-topic>查看全部笔记 →</button></div><a class="featured" data-topics="modeling architecture" href="article.html"><div class="featured-art" aria-hidden="true"><span class="mono">ARCHITECTURE / 001</span><div class="module-grid"><div>界面交互</div><div>应用编排</div><div class="highlight">领域规则</div><div>基础设施</div></div><span class="art-caption">边界清晰，变化才有归处。</span></div><div class="featured-copy"><div class="article-meta"><span class="category">架构设计</span><span>内容草稿</span></div><h3>复杂系统的模块边界，<br>应该从哪里划起？</h3><p>从变化的原因、规则的归属和协作成本出发，思考模块划分。用一个简化的建模编辑场景说明架构取舍。</p><div class="featured-foot"><span>方法笔记 · 含结构示意</span><span class="read-link">阅读草稿 ↗</span></div></div></a>
+      <div class="planned-heading"><h3>接下来想写</h3><span>选题规划</span></div>
+      <div class="writing-row" data-topics="architecture"><span class="row-number">02</span><div><span class="small-category">技术决策</span><h3>一份技术方案，如何把取舍说清楚</h3><p>从候选方案、验证依据，到失败后的恢复路径。</p></div><span class="status">准备中</span></div>
+      <div class="writing-row" data-topics="management"><span class="row-number">03</span><div><span class="small-category">团队与交付</span><h3>技术负责人如何连接架构设计与团队执行</h3><p>让模块职责、任务拆分和集成验证互相对齐。</p></div><span class="status">准备中</span></div>
+    </section>
+    <section class="project-section" id="project"><div class="wrap project-inner"><div><p class="eyebrow">02 / PRACTICE</p><h2>在真实的工程里，<br>理解复杂系统。</h2><p class="project-intro">架构的价值，需要在产品和团队的日常工作中得到验证。</p></div><div class="project-card"><div class="project-label"><span class="project-symbol" aria-hidden="true">⌘</span><span>代表项目</span></div><h3>SE-MBSE</h3><p>面向 SysML v2 的系统建模与工程管理平台。</p><dl class="project-details"><div><dt>我的角色</dt><dd>项目负责人</dd></div><div><dt>主要职责</dt><dd>团队管理 · 技术方案 · 架构设计</dd></div><div><dt>分享方向</dt><dd>模块边界 · 技术取舍 · 工程协作</dd></div></dl><p class="project-note">相关思考将逐步整理为工程笔记。</p></div></div></section>
+    <section class="section wrap about" id="about"><div class="about-mark" aria-hidden="true">韩<span>飞</span><small>HAN FEI</small></div><div><p class="eyebrow">03 / ABOUT</p><h2>韩飞，也在这里写工程笔记。</h2><p>我是 SE-MBSE 项目负责人，主要负责团队管理、技术方案与架构设计。</p><p>这个网站用于整理项目中的技术思考：如何理解问题、比较方案、划分系统职责，以及让设计在团队协作中落地。</p><p class="signature">飞的工程笔记 <span>／ 从具体问题出发</span></p></div></section>
+  </main>
+  <footer class="wrap footer"><span>© 2026 韩飞 · 工程与架构</span><span>记录思考，持续修正。</span><a href="#main">回到顶部 ↑</a></footer>
+</body></html>

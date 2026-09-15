@@ -1,0 +1,70 @@
+/* 设计令牌：颜色基线来自已确认的原型；所有尺寸使用 rem（根字号 16px）。 */
+:root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --surface: #f5f7fa;
+  --ink: #172234;
+  --muted: #616e7e;
+  --line: #e0e6ec;
+  --accent: #2458d5;
+  --accent-strong: #1946b1;
+  --tint: #edf3ff;
+  --card: #ffffff;
+  --diagram: #edf2f8;
+  --dark-section: #11233a;
+  --dark-card: #182c45;
+  --dark-line: #3d5068;
+  --dark-ink: #f1f6ff;
+  --dark-muted: #aebcd1;
+  --shadow: 0 20px 50px rgba(21, 44, 72, 0.08);
+
+  --code-bg: #f6f8fa;
+  --code-top-bg: #eaeef2;
+  --code-ink: #24292f;
+  --code-line: #d7dde3;
+  --code-muted: #57606a;
+
+  --wrap: 71.5rem; /* 1144 + 边距余量，见 .wrap */
+  --header-h: 76px;
+  --anchor-offset: calc(var(--header-h, 76px) + 16px);
+  --radius-s: 4px;
+  --radius-m: 6px;
+  --radius-l: 8px;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei',
+    'PingFang SC', 'Noto Sans CJK SC', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: Consolas, 'JetBrains Mono', 'SFMono-Regular', Menlo, 'Courier New',
+    monospace;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #101722;
+  --surface: #161f2d;
+  --ink: #e6edf7;
+  --muted: #a1afc2;
+  --line: #303e51;
+  --accent: #8aafff;
+  --accent-strong: #a8c4ff;
+  --tint: #202f47;
+  --card: #1b2636;
+  --diagram: #152235;
+  --dark-section: #0d1723;
+  --dark-card: #152235;
+  --dark-line: #2c3d55;
+  --shadow: none;
+
+  --code-bg: #0d1622;
+  --code-top-bg: #13203a;
+  --code-ink: #e2ebf7;
+  --code-line: #33445b;
+  --code-muted: #c0d0e5;
+}

@@ -1,0 +1,13 @@
+---
+import { SITE } from '../config/site';
+import { withBase } from '../lib/urls';
+
+const year = new Date().getFullYear(); // 版权年份按构建年份生成
+---
+
+<footer class="wrap footer">
+  <span>© {year} {SITE.name}</span>
+  <span>记录思考，持续修正。</span>
+  <a href={withBase('/rss.xml')}>RSS 订阅</a>
+  <a href="#main">回到顶部 ↑</a>
+</footer>

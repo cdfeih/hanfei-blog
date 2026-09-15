@@ -1,0 +1,40 @@
+---
+import type { Note } from '../lib/content';
+import { topicLabel, kindLabel } from '../data/topics';
+import { withBase } from '../lib/urls';
+
+interface Props {
+  note: Note;
+}
+
+const { note } = Astro.props;
+const href = withBase(`/notes/${note.data.slug}/`);
+const kind = kindLabel(note.data.kind);
+const date = note.data.publishedAt;
+---
+
+<a class="featured" href={href} data-topics={note.data.topics.join(' ')} data-note>
+  <div class="featured-art" aria-hidden="true">
+    <span class="mono">ENGINEERING NOTES</span>
+    <div class="module-grid">
+      <div>界面交互</div>
+      <div>应用编排</div>
+      <div class="highlight">领域规则</div>
+      <div>基础设施</div>
+    </div>
+    <span class="art-caption">边界清晰，变化才有归处。</span>
+  </div>
+  <div class="featured-copy">
+    <div class="article-meta">
+      {kind && <span class="category">{kind}</span>}
+      {date && <span>{date}</span>}
+      <span>{note.data.topics.map((t) => topicLabel(t)).join(' / ')}</span>
+    </div>
+    <h3>{note.data.title}</h3>
+    <p>{note.data.description}</p>
+    <div class="featured-foot">
+      <span>编辑精选</span>
+      <span class="read-link">阅读文章 ↗</span>
+    </div>
+  </div>
+</a>

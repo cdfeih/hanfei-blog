@@ -1,0 +1,188 @@
+---
+import { withBase } from '../lib/urls';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="搜索" description="搜索全部工程笔记的标题和正文。" pathname="/search/" noindex active="none">
+  <section class="section wrap" style="padding-top: 2.5rem; max-width: 47.5rem;">
+    <div class="section-heading" style="display: block;">
+      <p class="eyebrow">SEARCH</p>
+      <h1 style="font-size: clamp(1.75rem, 2.4vw, 2rem); letter-spacing: -0.03em;">搜索</h1>
+    </div>
+
+    <form role="search" data-search-form>
+      <label for="search-input" style="display: block; font-size: 0.875rem; color: var(--muted); margin-bottom: 0.5rem;">
+        搜索文章标题与正文
+      </label>
+      <input
+        id="search-input"
+        type="search"
+        name="q"
+        placeholder="例如：模块边界、React…"
+        autocomplete="off"
+        data-search-input
+        style="width: 100%; min-height: 44px; padding: 0.625rem 0.875rem; font-size: 1rem; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-m);"
+      />
+    </form>
+
+    <p class="filter-summary" role="status" aria-live="polite" aria-atomic="true" data-search-status style="margin-top: 1rem;">
+      输入关键词开始搜索。
+    </p>
+
+    <div data-search-error hidden style="margin-top: 1rem;">
+      <div class="empty-state">
+        <h3>搜索索引暂时无法加载</h3>
+        <p>文章阅读不受影响，可以稍后重试或直接浏览工程笔记。</p>
+        <button type="button" class="button-link" data-search-retry>重试</button>
+        <a class="button-link" href={withBase('/notes/')} style="display: inline-block;">浏览工程笔记 →</a>
+      </div>
+    </div>
+
+    <div data-search-results style="margin-top: 1rem;"></div>
+  </section>
+
+  <script>
+    // 搜索（Pagefind）：?q= 初始化；输入更新用 replaceState；状态覆盖未输入/加载中/结果/无结果/失败。
+    import { PAGEFIND_ENTRY, BASE } from '../lib/urls';
+
+    const form = document.querySelector<HTMLFormElement>('[data-search-form]');
+    const input = document.querySelector<HTMLInputElement>('[data-search-input]');
+    const statusEl = document.querySelector<HTMLElement>('[data-search-status]');
+    const errorBox = document.querySelector<HTMLElement>('[data-search-error]');
+    const resultsBox = document.querySelector<HTMLElement>('[data-search-results]');
+    const endpoint = PAGEFIND_ENTRY;
+
+    interface PagefindResultData {
+      url: string;
+      title?: string;
+      excerpt: string;
+      meta?: { title?: string };
+    }
+    interface Pagefind {
+      search(query: string): Promise<{
+        results: { data(): Promise<PagefindResultData> }[];
+      }>;
+    }
+    let pagefind: Pagefind | null = null;
+    let loading: Promise<Pagefind | null> | null = null;
+    let debounceTimer: number | undefined;
+
+    function withBaseClient(path: string): string {
+      const base = BASE === '/' ? '' : BASE;
+      if (!base) return path;
+      return `${base}${path}`;
+    }
+
+    function setStatus(text: string): void {
+      if (statusEl) statusEl.textContent = text;
+    }
+
+    function showError(show: boolean): void {
+      if (errorBox) errorBox.hidden = !show;
+    }
+
+    function clearResults(): void {
+      if (resultsBox) resultsBox.replaceChildren();
+    }
+
+    async function loadIndex(): Promise<Pagefind | null> {
+      if (pagefind) return pagefind;
+      if (!loading) {
+        setStatus('索引加载中…');
+        loading = import(/* @vite-ignore */ endpoint)
+          .then((mod: Pagefind) => {
+            pagefind = mod;
+            return mod;
+          })
+          .catch(() => null);
+      }
+      return loading;
+    }
+
+    async function renderResults(
+      query: string,
+      results: { data(): Promise<PagefindResultData> }[]
+    ): Promise<void> {
+      clearResults();
+      if (results.length === 0) {
+        setStatus(`没有找到与「${query}」相关的内容，换个关键词试试。`);
+        return;
+      }
+      setStatus(`「${query}」共 ${results.length} 条结果`);
+      const frag = document.createDocumentFragment();
+      for (const result of results.slice(0, 20)) {
+        const data = await result.data();
+        const a = document.createElement('a');
+        a.className = 'article-row search-row';
+        a.href = withBaseClient(data.url);
+        const body = document.createElement('div');
+        const title = document.createElement('h3');
+        title.textContent = data.meta?.title || data.title || '未命名文章';
+        const excerpt = document.createElement('p');
+        excerpt.className = 'summary';
+        excerpt.innerHTML = data.excerpt;
+        body.append(title, excerpt);
+        const side = document.createElement('span');
+        side.className = 'row-side';
+        side.setAttribute('aria-hidden', 'true');
+        side.textContent = '→';
+        a.append(body, side);
+        frag.append(a);
+      }
+      resultsBox?.append(frag);
+    }
+
+    async function runSearch(query: string): Promise<void> {
+      if (!query.trim()) {
+        clearResults();
+        showError(false);
+        setStatus('输入关键词开始搜索。');
+        return;
+      }
+      const index = await loadIndex();
+      if (!index) {
+        clearResults();
+        showError(true);
+        setStatus('索引加载失败。');
+        return;
+      }
+      showError(false);
+      try {
+        const res = await index.search(query);
+        await renderResults(query, res.results);
+      } catch {
+        clearResults();
+        showError(true);
+        setStatus('搜索失败。');
+      }
+    }
+
+    input?.addEventListener('input', () => {
+      const q = input.value;
+      const url = new URL(window.location.href);
+      if (q.trim()) url.searchParams.set('q', q);
+      else url.searchParams.delete('q');
+      history.replaceState({}, '', url);
+      window.clearTimeout(debounceTimer);
+      debounceTimer = window.setTimeout(() => runSearch(q), 180);
+    });
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      runSearch(input?.value ?? '');
+    });
+
+    document.querySelector('[data-search-retry]')?.addEventListener('click', () => {
+      pagefind = null;
+      loading = null;
+      runSearch(input?.value ?? '');
+    });
+
+    // ?q= 初始化
+    const initial = new URLSearchParams(window.location.search).get('q');
+    if (initial) {
+      if (input) input.value = initial;
+      runSearch(initial);
+    }
+  </script>
+</BaseLayout>

@@ -1,0 +1,51 @@
+---
+import { SITE } from '../config/site';
+import { withBase } from '../lib/urls';
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props {
+  /** 当前导航高亮：home | notes | none（首页滚动区域由脚本细化） */
+  active?: 'home' | 'notes' | 'none';
+}
+
+const { active = 'none' } = Astro.props;
+
+const items = [
+  { key: 'home', label: '首页', href: withBase('/') },
+  { key: 'notes', label: '工程笔记', href: withBase('/notes/') },
+  { key: 'project', label: '项目实践', href: withBase('/#project') },
+  { key: 'about', label: '关于', href: withBase('/#about') },
+] as const;
+
+function isCurrent(key: string): boolean {
+  if (active === 'none') return false;
+  if (active === 'home') return key === 'home';
+  return key === 'notes';
+}
+---
+
+<header class="header">
+  <div class="wrap header-inner">
+    <a class="brand" href={withBase('/')} aria-label={`${SITE.author}，首页`}>
+      <span class="monogram">HF<span>.</span></span>
+      <span>{SITE.author}<span class="brand-sub">工程与架构</span></span>
+    </a>
+    <nav class="nav" aria-label="主导航" data-active={active}>
+      {
+        items.map((item) => (
+          <a
+            href={item.href}
+            aria-current={isCurrent(item.key) ? 'page' : undefined}
+            data-navkey={item.key}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+    <div class="header-tools">
+      <a class="theme-toggle search-link" href={withBase('/search/')} aria-label="搜索文章">搜索</a>
+      <ThemeToggle />
+    </div>
+  </div>
+</header>

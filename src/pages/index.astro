@@ -1,0 +1,168 @@
+---
+import { getPublicNotes } from '../lib/content';
+import { withBase } from '../lib/urls';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TopicFilter from '../components/TopicFilter.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import ArticleRow from '../components/ArticleRow.astro';
+import EmptyState from '../components/EmptyState.astro';
+import ProjectSection from '../components/ProjectSection.astro';
+
+const notes = await getPublicNotes();
+const featured = notes[0];
+const rest = notes.slice(1, 3);
+const hasNotes = notes.length > 0;
+// 项目区可展示最多 3 个与建模/架构相关的已发布文章链接
+const projectRelated = notes
+  .filter((n) => n.data.topics.some((t) => t === 'modeling' || t === 'architecture'))
+  .slice(0, 3);
+---
+
+<BaseLayout scrollSpy pathname="/">
+  <section class="hero wrap">
+    <div class="hero-copy">
+      <p class="eyebrow">HAN FEI / ENGINEERING NOTES</p>
+      <p class="intro">你好，我是韩飞。</p>
+      <h1>以架构理清复杂，<br />以协作推动落地<span class="blue">。</span></h1>
+      <p class="hero-description">
+        SE-MBSE 项目负责人。关注技术方案、架构设计与团队管理，记录从工程问题到产品交付的思考。
+      </p>
+      <div class="hero-actions">
+        <a class="button primary" href={withBase('/notes/')}>阅读工程笔记 <span aria-hidden="true">↗</span></a>
+        <a class="text-link" href="#about">了解我的工作 <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="hero-tags">
+        <span>架构设计</span><span>技术决策</span><span>团队交付</span>
+      </div>
+    </div>
+    <div
+      class="architecture"
+      aria-label="工作方法示意：问题与约束，经过架构决策与团队协作，到达产品交付，并通过反馈持续修正"
+    >
+      <div class="diagram-top"><span>从问题到交付</span><span class="mono">FIG. 01</span></div>
+      <div class="diagram-canvas">
+        <div class="node node-input">
+          <span class="node-index">01 / CONTEXT</span><strong>问题与约束</strong><span>目标 · 边界 · 使用场景</span>
+        </div>
+        <div class="connector" aria-hidden="true">↓</div>
+        <div class="node-pair">
+          <div class="node"><span class="node-index">02 / DESIGN</span><strong>架构决策</strong><span>职责与技术取舍</span></div>
+          <span class="between" aria-hidden="true">↔</span>
+          <div class="node"><span class="node-index">03 / PEOPLE</span><strong>团队协作</strong><span>共识与执行节奏</span></div>
+        </div>
+        <div class="connector" aria-hidden="true">↓</div>
+        <div class="node node-output">
+          <span class="node-index">04 / DELIVERY</span><strong>产品交付</strong><span>验证结果，持续修正</span>
+        </div>
+      </div>
+      <div class="diagram-bottom"><span class="feedback">↺ 反馈回到问题</span><span>工作方法示意</span></div>
+    </div>
+  </section>
+
+  <section class="section wrap" id="writing">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">01 / WRITING</p>
+        <h2>工程笔记</h2>
+      </div>
+      <p>把问题讲清楚，也把取舍留下来。</p>
+    </div>
+
+    {
+      hasNotes ? (
+        <>
+          <TopicFilter />
+          <p class="filter-summary" role="status" aria-live="polite" aria-atomic="true" hidden data-filter-summary />
+          <p class="count-note" data-count-note>
+            共 {notes.length} 篇，当前展示 {Math.min(notes.length, 3)} 篇
+          </p>
+          <div data-note-list>
+            {featured && <ArticleCard note={featured} />}
+            {rest.map((note) => (
+              <ArticleRow note={note} />
+            ))}
+          </div>
+          <div class="empty-state" role="status" hidden data-topic-empty>
+            <h3>这个方向的笔记还在整理中</h3>
+            <p>可以切换其他分类，或查看全部笔记。</p>
+            <button type="button" class="button-link" data-reset-topic>查看全部笔记 →</button>
+          </div>
+          <a class="text-link" href={withBase('/notes/')} data-view-all>查看全部笔记 →</a>
+        </>
+      ) : (
+        <EmptyState
+          title="第一篇工程笔记正在整理中"
+          description="网站功能已就绪，正式文章发布后将在这里展示。"
+        />
+      )
+    }
+  </section>
+
+  <ProjectSection relatedNotes={projectRelated} />
+
+  <section class="section wrap about" id="about">
+    <div class="about-mark" aria-hidden="true">韩<span>飞</span><small>HAN FEI</small></div>
+    <div>
+      <p class="eyebrow">03 / ABOUT</p>
+      <h2>韩飞，也在这里写工程笔记。</h2>
+      <p>我是 SE-MBSE 项目负责人，主要负责团队管理、技术方案与架构设计。</p>
+      <p>
+        这个网站用于整理项目中的技术思考：如何理解问题、比较方案、划分系统职责，以及让设计在团队协作中落地。
+      </p>
+      <p class="signature">飞的工程笔记 <span>／ 从具体问题出发</span></p>
+    </div>
+  </section>
+
+  <script>
+    // 首页分类筛选：领域筛选作用于精选卡与文章行；结果展示前 3 篇，计数同步更新。
+    const filterBox = document.querySelector('[data-topic-filter]');
+    const list = document.querySelector('[data-note-list]');
+    if (filterBox && list) {
+      const buttons = [...filterBox.querySelectorAll<HTMLButtonElement>('[data-topic]')];
+      const items = [...list.querySelectorAll<HTMLElement>('[data-note]')];
+      const summary = document.querySelector<HTMLElement>('[data-filter-summary]');
+      const empty = document.querySelector<HTMLElement>('[data-topic-empty]');
+      const countNote = document.querySelector<HTMLElement>('[data-count-note]');
+      const viewAll = document.querySelector<HTMLAnchorElement>('[data-view-all]');
+      const total = items.length;
+      const topicsOf = (el: HTMLElement) => (el.dataset.topics ?? '').split(' ').filter(Boolean);
+
+      const apply = (topic: string) => {
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.topic === topic)));
+        const matching = items.filter(
+          (el) => topic === 'all' || topicsOf(el).includes(topic)
+        );
+        // 首页最多展示筛选结果的前 3 篇
+        const visibleSet = new Set(matching.slice(0, 3));
+        items.forEach((el) => {
+          el.hidden = !visibleSet.has(el);
+        });
+        if (empty) empty.hidden = matching.length > 0;
+        if (countNote) {
+          countNote.hidden = matching.length === 0;
+          countNote.textContent = `共 ${total} 篇，当前展示 ${visibleSet.size} 篇`;
+        }
+        if (summary) {
+          summary.hidden = topic === 'all';
+          summary.textContent =
+            topic === 'all' ? '' : `已按「${buttons.find((b) => b.dataset.topic === topic)?.textContent}」筛选`;
+        }
+        if (viewAll) {
+          const base = viewAll.dataset.baseHref ?? viewAll.getAttribute('href') ?? '/notes/';
+          viewAll.dataset.baseHref = base;
+          viewAll.setAttribute('href', topic === 'all' ? base : `${base}?topic=${topic}`);
+        }
+      };
+
+      buttons.forEach((b) =>
+        b.addEventListener('click', () => apply(b.dataset.topic ?? 'all'))
+      );
+      document
+        .querySelector('[data-reset-topic]')
+        ?.addEventListener('click', () => {
+          apply('all');
+          buttons[0]?.focus({ preventScroll: true });
+        });
+    }
+  </script>
+</BaseLayout>

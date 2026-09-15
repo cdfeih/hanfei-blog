@@ -1,0 +1,67 @@
+---
+import { SITE } from '../config/site';
+import { withBase } from '../lib/urls';
+import Seo from '../components/Seo.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  /** 页面标题（不含站名后缀） */
+  title?: string;
+  description?: string;
+  /** 传给 SEO 的当前路径（含 base，不带查询参数） */
+  pathname?: string;
+  noindex?: boolean;
+  /** 当前导航高亮：home | notes | none */
+  active?: 'home' | 'notes' | 'none';
+  /** 首页启用滚动高亮 */
+  scrollSpy?: boolean;
+  /** 文章页结构化数据 */
+  article?: {
+    publishedAt?: string;
+    updatedAt?: string;
+    tags?: string[];
+  };
+}
+
+const {
+  title,
+  description = SITE.description,
+  pathname,
+  noindex = false,
+  active = 'none',
+  scrollSpy = false,
+  article,
+} = Astro.props;
+const pageTitle = title ? `${title} · ${SITE.author}` : SITE.title;
+
+/**
+ * 主题初始化：首屏绘制前设置 data-theme，避免深色用户看到浅色闪烁（D10）。
+ * 用户选择优先于系统偏好；存储读取失败时静默降级。
+ */
+const themeInit = `(function(){var t=null;try{t=localStorage.getItem('hanfei-theme')}catch(e){}
+var dark=t?t==='dark':(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+var r=document.documentElement;r.dataset.theme=dark?'dark':'light';})();`;
+---
+
+<!doctype html>
+<html lang={SITE.lang} data-page={scrollSpy ? 'home' : 'generic'}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <Seo {title} {description} {pathname} {noindex} {article} />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <script is:inline set:html={themeInit} />
+  </head>
+  <body>
+    <a class="skip" href="#main">跳至正文</a>
+    <Header {active} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <script src="../scripts/app.ts"></script>
+  </body>
+</html>

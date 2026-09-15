@@ -1,0 +1,27 @@
+---
+import { render } from 'astro:content';
+import { getPublicNotes, getAllNotes, assertUniqueSlugs, pickRelated, type Note } from '../../lib/content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+
+export async function getStaticPaths() {
+  const all = await getAllNotes();
+  assertUniqueSlugs(all);
+  // 生产构建只输出已发布文章；草稿仅存在于本地开发预览（D08）。
+  const visible: Note[] = import.meta.env.DEV ? all : await getPublicNotes();
+  return visible.map((note) => ({
+    params: { slug: note.data.slug },
+    props: { note },
+  }));
+}
+
+const { note } = Astro.props;
+const { Content, headings } = await render(note);
+
+const publicNotes = await getPublicNotes();
+const related = pickRelated(publicNotes, note, 3);
+const isDraft = note.data.status !== 'published';
+---
+
+<ArticleLayout {note} {headings} {related} {isDraft}>
+  <Content />
+</ArticleLayout>

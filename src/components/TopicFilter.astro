@@ -1,0 +1,21 @@
+---
+import { TOPICS } from '../data/topics';
+
+interface Props {
+  /** 无障碍分组名称 */
+  label?: string;
+}
+
+const { label = '按主题浏览' } = Astro.props;
+---
+
+<div class="topic-filter" data-topic-filter>
+  <p class="topic-filter-label" id="topic-filter-label">
+    {label}
+    <span class="mono" aria-hidden="true">TOPICS</span>
+  </p>
+  <div class="topic-buttons" role="group" aria-labelledby="topic-filter-label" data-topic-buttons>
+    <button type="button" data-topic="all" aria-pressed="true">全部笔记</button>
+    {TOPICS.map((topic) => <button type="button" data-topic={topic.value} aria-pressed="false">{topic.label}</button>)}
+  </div>
+</div>

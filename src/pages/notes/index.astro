@@ -1,0 +1,121 @@
+---
+import { getPublicNotes } from '../../lib/content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TopicFilter from '../../components/TopicFilter.astro';
+import ArticleRow from '../../components/ArticleRow.astro';
+import EmptyState from '../../components/EmptyState.astro';
+
+const notes = await getPublicNotes();
+const hasNotes = notes.length > 0;
+---
+
+<BaseLayout title="工程笔记" description="全部工程笔记：架构设计、技术决策、团队与交付。" pathname="/notes/" active="notes">
+  <section class="section wrap" id="writing" style="padding-top: 2.5rem;">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">01 / WRITING</p>
+        <h1 style="font-size: clamp(1.75rem, 2.4vw, 2rem); letter-spacing: -0.03em; line-height: 1.4;">工程笔记</h1>
+      </div>
+      <p>把问题讲清楚，也把取舍留下来。</p>
+    </div>
+
+    {
+      hasNotes ? (
+        <>
+          <noscript>
+            <p class="filter-summary">分类筛选需要启用 JavaScript；下方为全部已发布文章的静态列表，可直接阅读。</p>
+            <style is:inline>
+              [data-topic-filter] {
+                display: none;
+              }
+            </style>
+          </noscript>
+          <TopicFilter />
+          <p class="filter-summary" role="status" aria-live="polite" aria-atomic="true" hidden data-filter-summary />
+          <p class="count-note" data-count-note>共 {notes.length} 篇</p>
+          <div data-note-list>
+            {notes.map((note) => (
+              <ArticleRow note={note} />
+            ))}
+          </div>
+          <div class="empty-state" role="status" hidden data-topic-empty>
+            <h3>这个方向的笔记还在整理中</h3>
+            <p>可以切换其他分类，或查看全部笔记。</p>
+            <button type="button" class="button-link" data-reset-topic>查看全部笔记 →</button>
+          </div>
+        </>
+      ) : (
+        <EmptyState
+          title="第一篇工程笔记正在整理中"
+          description="正式文章发布后将在这里展示。"
+        />
+      )
+    }
+  </section>
+
+  <script>
+    // 列表分类筛选（D07）：状态写入 URL（?topic=），刷新与前进/后退可恢复；无效参数按全部处理。
+    import { isValidTopic } from '../../data/topics';
+
+    const filterBox = document.querySelector('[data-topic-filter]');
+    const list = document.querySelector('[data-note-list]');
+    if (filterBox && list) {
+      const buttons = [...filterBox.querySelectorAll<HTMLButtonElement>('[data-topic]')];
+      const items = [...list.querySelectorAll<HTMLElement>('[data-note]')];
+      const summary = document.querySelector<HTMLElement>('[data-filter-summary]');
+      const empty = document.querySelector<HTMLElement>('[data-topic-empty]');
+      const countNote = document.querySelector<HTMLElement>('[data-count-note]');
+
+      const topicsOf = (el: HTMLElement) => (el.dataset.topics ?? '').split(' ').filter(Boolean);
+      const countOf = (topic: string) =>
+        topic === 'all' ? items.length : items.filter((el) => topicsOf(el).includes(topic)).length;
+
+      const apply = (topic: string, updateUrl: boolean) => {
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.topic === topic)));
+        items.forEach((el) => {
+          el.hidden = topic !== 'all' && !topicsOf(el).includes(topic);
+        });
+        if (empty) empty.hidden = countOf(topic) > 0;
+        if (countNote) {
+          countNote.hidden = countOf(topic) === 0;
+          countNote.textContent = `共 ${countOf(topic)} 篇`;
+        }
+        if (summary) {
+          const label = buttons.find((b) => b.dataset.topic === topic)?.textContent ?? '';
+          summary.hidden = topic === 'all';
+          summary.textContent = topic === 'all' ? '' : `已按「${label}」筛选`;
+        }
+        if (updateUrl) {
+          const url = new URL(window.location.href);
+          if (topic === 'all') url.searchParams.delete('topic');
+          else url.searchParams.set('topic', topic);
+          history.pushState({}, '', url);
+        }
+        // 筛选状态存入会话，文章页返回列表时尽量恢复来源领域
+        try {
+          sessionStorage.setItem('hf-notes-topic', topic);
+        } catch {
+          /* 忽略 */
+        }
+      };
+
+      // 初始化：读取 URL 参数，无效按全部处理
+      const initial = new URLSearchParams(window.location.search).get('topic');
+      apply(isValidTopic(initial) ? initial : 'all', false);
+
+      buttons.forEach((b) =>
+        b.addEventListener('click', () => apply(b.dataset.topic ?? 'all', true))
+      );
+      document
+        .querySelector('[data-reset-topic]')
+        ?.addEventListener('click', () => {
+          apply('all', true);
+          buttons[0]?.focus({ preventScroll: true });
+        });
+      window.addEventListener('popstate', () => {
+        const t = new URLSearchParams(window.location.search).get('topic');
+        apply(isValidTopic(t) ? t : 'all', false);
+      });
+    }
+  </script>
+</BaseLayout>

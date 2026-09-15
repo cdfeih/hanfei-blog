@@ -1,0 +1,217 @@
+---
+import { SITE } from '../config/site';
+import { withBase } from '../lib/urls';
+import type { Note } from '../lib/content';
+import { readingMinutes } from '../lib/content';
+import { topicLabel, kindLabel } from '../data/topics';
+import BaseLayout from './BaseLayout.astro';
+import ArticleRow from '../components/ArticleRow.astro';
+import '../styles/article.css';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  note: Note;
+  headings: Heading[];
+  related?: Note[];
+  /** 是否为草稿预览（仅本地开发） */
+  isDraft?: boolean;
+}
+
+const { note, headings, related = [], isDraft = false } = Astro.props;
+const d = note.data;
+const kind = kindLabel(d.kind);
+const minutes = readingMinutes(note.body ?? '');
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const pathname = withBase(`/notes/${d.slug}/`);
+---
+
+<BaseLayout
+  title={d.title}
+  description={d.description}
+  {pathname}
+  active="notes"
+  article={{ publishedAt: d.publishedAt, updatedAt: d.updatedAt, tags: [...d.topics] }}
+>
+  <div class="wrap article-shell">
+    <nav class="breadcrumb" aria-label="位置">
+      <a href={withBase('/notes/')} data-back-to-notes>← 工程笔记</a>
+      <span> / {kind ?? '笔记'}</span>
+    </nav>
+
+    <div class="article-layout">
+      <article>
+        <header class="article-head">
+          <div class="article-meta">
+            {kind && <span class="category">{kind}</span>}
+            <span>{d.topics.map((t) => topicLabel(t)).join(' / ')}</span>
+          </div>
+          <h1>{d.title}</h1>
+          <p class="dek">{d.description}</p>
+          <div class="byline">
+            <span class="avatar" aria-hidden="true">飞</span>
+            <span>{SITE.author}</span>
+            <span aria-hidden="true">·</span>
+            {d.publishedAt && <span>发布于 {d.publishedAt}</span>}
+            {d.updatedAt && <span>更新于 {d.updatedAt}</span>}
+            <span aria-hidden="true">·</span>
+            <span>约 {minutes} 分钟</span>
+            {isDraft && <span>草稿</span>}
+          </div>
+        </header>
+
+        {
+          isDraft && (
+            <aside class="draft-note" role="note">
+              本文为草稿，仅本地开发预览可见；正式构建不会生成此页面，也不会出现在列表、搜索、RSS 或站点地图中。
+            </aside>
+          )
+        }
+
+        {/* 目录：DOM 顺序位于标题/摘要/作者之后、正文之前（D04） */}
+        {
+          toc.length > 0 && (
+            <aside class="toc article-toc" aria-label="文章目录">
+              <details class="toc-details" open>
+                <summary>
+                  本篇目录
+                  <span class="toc-caret" aria-hidden="true">›</span>
+                </summary>
+                <div class="toc-list">
+                  {toc.map((h) => (
+                    <a
+                      href={`#${h.slug}`}
+                      class={h.depth === 3 ? 'toc-h3' : undefined}
+                      data-toc-link={h.slug}
+                    >
+                      {h.text}
+                    </a>
+                  ))}
+                </div>
+              </details>
+              <div class="toc-note">
+                <strong>{SITE.nickname}</strong><br />
+                从具体问题出发，记录架构、技术决策与团队交付中的思考。
+              </div>
+            </aside>
+          )
+        }
+
+        <div class="prose-wrap">
+          <div class="prose" data-pagefind-body>
+            <slot />
+          </div>
+
+          <div class="article-bottom">
+            <a href={withBase('/notes/')} data-back-to-notes-2>← 返回工程笔记</a>
+            <a href="#main">回到顶部 ↑</a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    {
+      related.length > 0 && (
+        <section class="related" aria-label="相关文章">
+          <h2>相关文章</h2>
+          <div>
+            {related.map((n) => (
+              <ArticleRow note={n} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </div>
+
+  <p class="visually-hidden" role="status" aria-live="polite" data-copy-status></p>
+
+  <script>
+    // 文章页交互：代码块包装与复制、目录高亮、返回列表恢复来源领域。
+    const STATUS_OK = '代码已复制到剪贴板';
+    const STATUS_FAIL = '复制失败，请选中代码手动复制';
+
+    const statusEl = document.querySelector<HTMLElement>('[data-copy-status]');
+    function announce(text: string): void {
+      if (statusEl) statusEl.textContent = text;
+    }
+
+    /* 包装 Shiki 输出的 pre：加语言标签与复制按钮（纯文本复制，保留换行） */
+    document.querySelectorAll<HTMLElement>('.prose pre').forEach((pre) => {
+      if (pre.closest('.code-block')) return;
+      const figure = document.createElement('figure');
+      figure.className = 'code-block';
+      const top = document.createElement('div');
+      top.className = 'code-top';
+      const lang = document.createElement('span');
+      lang.textContent = pre.dataset.language || '代码';
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'copy-code';
+      btn.textContent = '复制';
+      btn.setAttribute('aria-label', '复制代码');
+      top.append(lang, btn);
+      pre.replaceWith(figure);
+      figure.append(top, pre);
+
+      btn.addEventListener('click', async () => {
+        const text = pre.textContent ?? '';
+        let ok = false;
+        try {
+          await navigator.clipboard.writeText(text);
+          ok = true;
+        } catch {
+          ok = false;
+        }
+        btn.textContent = ok ? '已复制' : '请选中复制';
+        announce(ok ? STATUS_OK : STATUS_FAIL);
+        setTimeout(() => {
+          btn.textContent = '复制';
+        }, 2500);
+      });
+    });
+
+    /* 目录当前章节高亮 */
+    const tocLinks = document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]');
+    if (tocLinks.length && 'IntersectionObserver' in window) {
+      const sections = [...tocLinks]
+        .map((a) => document.getElementById(a.dataset.tocLink ?? ''))
+        .filter((el): el is HTMLElement => !!el);
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const current = entries.find((e) => e.isIntersecting);
+          if (!current) return;
+          tocLinks.forEach((link) => {
+            const active = link.getAttribute('href') === `#${current.target.id}`;
+            link.classList.toggle('current', active);
+            if (active) link.setAttribute('aria-current', 'location');
+            else link.removeAttribute('aria-current');
+          });
+        },
+        { rootMargin: '-15% 0px -55% 0px' }
+      );
+      sections.forEach((s) => observer.observe(s));
+    }
+
+    /* 返回列表时尽量保留来源领域（D07） */
+    let saved: string | null = null;
+    try {
+      saved = sessionStorage.getItem('hf-notes-topic');
+    } catch {
+      /* 忽略 */
+    }
+    if (saved && saved !== 'all') {
+      const backLinks = document.querySelectorAll<HTMLAnchorElement>(
+        '[data-back-to-notes],[data-back-to-notes-2]'
+      );
+      backLinks.forEach((a) => {
+        const href = a.getAttribute('href');
+        if (href) a.setAttribute('href', `${href}?topic=${saved}`);
+      });
+    }
+  </script>
+</BaseLayout>

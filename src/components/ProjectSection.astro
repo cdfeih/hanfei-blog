@@ -1,0 +1,47 @@
+---
+import type { Note } from '../lib/content';
+import { withBase } from '../lib/urls';
+
+interface Props {
+  /** 与项目相关的已发布文章（最多 3 个，由页面层传入） */
+  relatedNotes?: Note[];
+}
+
+const { relatedNotes = [] } = Astro.props;
+---
+
+<section class="project-section" id="project">
+  <div class="wrap project-inner">
+    <div>
+      <p class="eyebrow">02 / PRACTICE</p>
+      <h2>在真实的工程里，<br />理解复杂系统。</h2>
+      <p class="project-intro">架构的价值，需要在产品和团队的日常工作中得到验证。</p>
+    </div>
+    <div class="project-card">
+      <div class="project-label">
+        <span class="project-symbol" aria-hidden="true">⌘</span>
+        <span>代表项目</span>
+      </div>
+      <h3>SE-MBSE</h3>
+      <p>面向 SysML v2 的系统建模与工程管理平台。</p>
+      <dl class="project-details">
+        <div><dt>我的角色</dt><dd>项目负责人</dd></div>
+        <div><dt>主要职责</dt><dd>团队管理 · 技术方案 · 架构设计</dd></div>
+        <div><dt>分享方向</dt><dd>模块边界 · 技术取舍 · 工程协作</dd></div>
+      </dl>
+      {
+        relatedNotes.length > 0 ? (
+          <div class="project-links">
+            {relatedNotes.map((note) => (
+              <a href={withBase(`/notes/${note.data.slug}/`)}>
+                相关文章 · {note.data.title} ↗
+              </a>
+            ))}
+          </div>
+        ) : (
+          <p class="project-note">相关思考将逐步整理为工程笔记。</p>
+        )
+      }
+    </div>
+  </div>
+</section>

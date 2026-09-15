@@ -1,0 +1,11 @@
+---
+interface Props {
+  label?: string;
+}
+
+const { label = '切换深色模式' } = Astro.props;
+---
+
+<button class="theme-toggle" type="button" data-theme-toggle aria-label={label} aria-pressed="false">
+  ◐ <span data-theme-label>外观</span>
+</button>

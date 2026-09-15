@@ -1,0 +1,443 @@
+/* 文章页样式：正文宽度、目录（D04 DOM 顺序）、代码块、引用与表格。 */
+.article-shell {
+  max-width: 70rem;
+  padding-block: 2.5rem 4.375rem;
+}
+
+.breadcrumb {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-bottom: 2.25rem;
+}
+
+.breadcrumb a {
+  color: var(--accent);
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.article-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 47.5rem) 13.75rem; /* 正文 720～760px，目录 220px */
+  grid-template-areas:
+    'head aside'
+    'prose aside';
+  gap: 2.5rem 3.5rem;
+  align-items: start;
+}
+
+.article-head {
+  grid-area: head;
+}
+
+.article-toc {
+  grid-area: aside;
+}
+
+.prose-wrap {
+  grid-area: prose;
+}
+
+.article-head h1 {
+  font-size: clamp(2.25rem, 3vw, 2.5rem); /* 36～40px */
+  line-height: 1.45;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+  color: var(--ink);
+}
+
+.article-head .dek {
+  font-size: 1.0625rem;
+  line-height: 1.95;
+}
+
+.byline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.625rem 0.875rem;
+  margin-top: 1.375rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  background: var(--tint);
+  border-radius: 50%;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* 草稿提示（仅本地开发可见） */
+.draft-note {
+  font-size: 0.875rem;
+  background: var(--tint);
+  border-left: 3px solid var(--accent);
+  padding: 0.875rem 1.125rem;
+  margin: 1.5rem 0;
+  color: var(--ink);
+  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+}
+
+/* ---------- 目录 ---------- */
+.toc h2 {
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  color: var(--ink);
+}
+
+.toc-list {
+  border-left: 1px solid var(--line);
+  padding-left: 1.5rem;
+}
+
+.toc a {
+  display: block;
+  color: var(--muted);
+  padding: 0.4375rem 0;
+  line-height: 1.7;
+  font-size: 0.875rem;
+}
+
+.toc a:hover,
+.toc a.current {
+  color: var(--accent);
+}
+
+.toc a.toc-h3 {
+  padding-left: 1rem;
+}
+
+.toc-note {
+  border-left: 1px solid var(--line);
+  margin-top: 1.5rem;
+  padding: 1.25rem 0 0 1.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.9;
+  color: var(--muted);
+}
+
+.toc-note strong {
+  color: var(--ink);
+}
+
+/* 目录使用单一 <details>：桌面 display:contents 常开展示；手机为默认收起的折叠面板。
+   服务端渲染带 open 属性，页面脚本在小屏移除 open 实现默认收起（无 JS 时仍可完整阅读）。 */
+.toc-details summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ink);
+  min-height: 44px;
+}
+
+.toc-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.toc-details summary .toc-caret {
+  color: var(--muted);
+  font-size: 0.875rem;
+  transition: transform 0.15s ease;
+}
+
+.toc-details[open] summary .toc-caret {
+  transform: rotate(90deg);
+}
+
+/* ---------- 正文 ---------- */
+.prose {
+  font-size: 1.0625rem;
+  line-height: 1.95;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  margin: 2.375rem 0 0.9375rem;
+  letter-spacing: -0.02em;
+}
+
+.prose h3 {
+  font-size: 1.1875rem;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.prose p {
+  margin: 0.9375rem 0;
+  color: var(--ink);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4em;
+  margin: 0.9375rem 0;
+}
+
+.prose li {
+  padding-left: 5px;
+  margin: 0.625rem 0;
+}
+
+.prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.prose blockquote {
+  margin: 1.5rem 0;
+  border-left: 3px solid var(--accent);
+  padding: 0.875rem 1.375rem;
+  background: var(--tint);
+  font-weight: 600;
+  color: var(--ink);
+  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+}
+
+.prose blockquote p {
+  margin: 0;
+}
+
+.prose img {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  margin: 1.5rem auto;
+  display: block;
+}
+
+.figure-caption,
+.prose figcaption {
+  font-size: 0.875rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: -0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+/* 表格：局部横向滚动，不撑破整页 */
+.table-wrap,
+.prose .tablewrap {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.prose table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.9375rem;
+  min-width: 32.5rem;
+}
+
+.prose td,
+.prose th {
+  border-bottom: 1px solid var(--line);
+  padding: 0.8125rem;
+  text-align: left;
+  color: var(--ink);
+}
+
+.prose th {
+  background: var(--surface);
+  font-weight: 600;
+}
+
+/* ---------- 代码块（深浅色自适应，Shiki 双主题） ---------- */
+.code-block {
+  border: 1px solid var(--code-line);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  background: var(--code-bg);
+  margin: 1.5rem 0;
+}
+
+.code-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--code-top-bg);
+  padding: 0.5rem 1rem;
+  color: var(--code-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+.copy-code {
+  font-size: 0.75rem;
+  background: transparent;
+  border: 1px solid var(--code-muted);
+  color: var(--code-ink);
+  padding: 0.375rem 0.625rem;
+  border-radius: var(--radius-s);
+  min-height: 44px;
+  font-family: inherit;
+}
+
+.copy-code:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.code-block pre,
+.prose pre {
+  overflow-x: auto;
+  padding: 1.25rem;
+  margin: 0;
+  line-height: 1.8;
+  font-size: 0.875rem; /* 普通代码 ≥14px */
+  tab-size: 2;
+}
+
+.prose .astro-code {
+  border: 1px solid var(--code-line);
+  border-radius: var(--radius-m);
+  background: var(--code-bg) !important;
+}
+
+/* Shiki 双主题切换 */
+:root[data-theme='dark'] .astro-code,
+:root[data-theme='dark'] .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+}
+
+/* ---------- 底部导航 ---------- */
+.article-bottom {
+  border-top: 1px solid var(--line);
+  margin-top: 2.25rem;
+  padding-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.9375rem;
+  flex-wrap: wrap;
+}
+
+.article-bottom a {
+  color: var(--accent);
+}
+
+.article-bottom a:hover {
+  text-decoration: underline;
+}
+
+/* 复制状态 live region（视觉隐藏） */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- 相关文章 ---------- */
+.related {
+  margin-top: 3rem;
+  border-top: 1px solid var(--line);
+  padding-top: 2rem;
+}
+
+.related h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 64rem) {
+  .article-layout {
+    grid-template-columns: minmax(0, 1fr) 11.5rem;
+    gap: 2.25rem 2.25rem;
+  }
+}
+
+@media (max-width: 47.5rem) {
+  .article-shell {
+    padding-top: 1.5rem;
+  }
+
+  .breadcrumb {
+    margin-bottom: 1.5rem;
+  }
+
+  /* D04：单列按 DOM 顺序排列——标题/摘要/作者 → 折叠目录 → 正文 */
+  .article-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .article-head h1 {
+    font-size: clamp(1.75rem, 7vw, 2rem); /* 28～32px */
+  }
+
+  .article-head .dek {
+    font-size: 1rem;
+  }
+
+  .article-toc {
+    margin: 1.5rem 0;
+  }
+
+  .toc h2,
+  .toc-note {
+    display: none;
+  }
+
+  .toc-details {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: var(--radius-m);
+    padding: 0.375rem 1rem;
+  }
+
+  .toc-details .toc-list {
+    border-left: 0;
+    padding: 0.25rem 0 0.75rem;
+  }
+
+  .toc-details:not([open]) .toc-list {
+    display: none;
+  }
+
+  .prose {
+    font-size: 1rem;
+  }
+
+  .byline {
+    gap: 0.625rem;
+  }
+
+  .code-top {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+/* 桌面端隐藏折叠组件的 summary，目录常开 */
+@media (min-width: 47.5625rem) {
+  .toc-details {
+    display: contents;
+  }
+
+  .toc-details summary {
+    display: none;
+  }
+}

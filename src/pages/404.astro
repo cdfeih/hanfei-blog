@@ -1,0 +1,16 @@
+---
+import { withBase } from '../lib/urls';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="页面未找到" description="访问的页面不存在。" pathname="/404/" noindex active="none">
+  <section class="section wrap" style="padding-block: 5rem; text-align: center; max-width: 40rem;">
+    <p class="eyebrow" style="margin-bottom: 0.5rem;">404 / NOT FOUND</p>
+    <h1 style="font-size: clamp(1.75rem, 3vw, 2.25rem); letter-spacing: -0.03em;">这个页面不存在</h1>
+    <p style="margin-top: 1rem;">链接可能已失效，或者文章还没有发布。可以从下面的入口继续。</p>
+    <div class="hero-actions" style="justify-content: center; margin-top: 1.75rem;">
+      <a class="button primary" href={withBase('/')}>返回首页</a>
+      <a class="text-link" href={withBase('/notes/')}>浏览工程笔记 →</a>
+    </div>
+  </section>
+</BaseLayout>
