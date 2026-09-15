@@ -33,11 +33,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Type & content check
-        run: pnpm exec astro check
-
       # 站点地址：优先使用仓库变量 SITE_URL；否则按 GITHUB_REPOSITORY 推导
       # （owner/owner.github.io → 根路径；owner/repo → /repo/ 子路径）
+      # 注意：必须在 astro check 之前执行——CI 上配置文件会校验 SITE_URL 是否存在。
       - name: Resolve site URL and base path
         id: site
         env:
@@ -61,6 +59,9 @@ jobs:
           echo "SITE_URL=${SITE_URL}" >> "$GITHUB_ENV"
           echo "BASE_PATH=${BASE_PATH}" >> "$GITHUB_ENV"
           echo "使用站点地址：${SITE_URL}，base：${BASE_PATH}"
+
+      - name: Type & content check
+        run: pnpm exec astro check
 
       - name: Build (Astro + Pagefind)
         run: |
