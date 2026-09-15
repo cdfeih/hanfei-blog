@@ -2,7 +2,8 @@
 title: 缓存写成功以后，数据库一定更新了吗？理解 Ignite 写后落库
 slug: ignite-write-behind-boundaries
 description: 结合 Ignite 缓存配置与分支懒加载流程，讨论写后落库、事务边界、重复初始化和清理时机。
-status: draft
+status: published
+publishedAt: 2026-09-15
 topics: [architecture, modeling]
 kind: decision
 ---

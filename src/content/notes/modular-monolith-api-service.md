@@ -2,7 +2,8 @@
 title: 多模块不等于微服务：建模平台的 API、实现与启动边界
 slug: modular-monolith-api-service
 description: 结合 Maven 模块与 injvm 配置，分析模块化单体如何区分契约、实现和部署，以及拆分服务之前要先稳定什么。
-status: draft
+status: published
+publishedAt: 2026-09-15
 topics: [architecture, management]
 kind: architecture
 ---

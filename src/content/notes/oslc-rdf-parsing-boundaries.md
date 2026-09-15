@@ -2,7 +2,8 @@
 title: 对接 OSLC 时，先确认拿到的是 RDF，再谈资源解析
 slug: oslc-rdf-parsing-boundaries
 description: 从 Jena Model 读取工具分析空响应、格式错误、空模型、资源身份和属性查询，建立可诊断的外部数据解析边界。
-status: draft
+status: published
+publishedAt: 2026-09-15
 topics: [modeling, architecture]
 kind: architecture
 ---

@@ -2,7 +2,8 @@
 title: 三个组件请求同一份数据：用共享 Promise 合并在途请求
 slug: atom-request-coalescing
 description: 分析 createAtomFetcher 如何区分未加载、加载中与已缓存状态，以及强制刷新、参数变化和缓存身份带来的边界。
-status: draft
+status: published
+publishedAt: 2026-09-15
 topics: [frontend, architecture]
 kind: architecture
 ---

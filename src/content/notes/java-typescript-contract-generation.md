@@ -2,7 +2,8 @@
 title: 从 Java 生成 TypeScript：自动化的难点在契约，不在文件数量
 slug: java-typescript-contract-generation
 description: 结合项目的 Java 到 TypeScript 生成脚本，讨论长整型、必填语义、泛型、接口扫描和生成产物的验证方式。
-status: draft
+status: published
+publishedAt: 2026-09-15
 topics: [frontend, architecture, management]
 kind: delivery
 ---

@@ -2,7 +2,8 @@
 title: Excel 导入导出异步化之后，真正需要管理的是任务生命周期
 slug: async-excel-task-lifecycle
 description: 结合异步导入导出器的 Handler、Support 和 Context，分析批处理、进度、错误反馈、分页一致性与资源收尾。
-status: draft
+status: published
+publishedAt: 2026-09-15
 topics: [architecture, management]
 kind: delivery
 ---

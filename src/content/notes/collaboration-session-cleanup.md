@@ -2,7 +2,8 @@
 title: 一个浏览器断开，不代表一个用户离线：协同会话的资源清理
 slug: collaboration-session-cleanup
 description: 从协同会话管理器分析连接、用户、工程与文档的不同生命周期，以及主动清理、定期清理和多标签页在线判断。
-status: draft
+status: published
+publishedAt: 2026-09-15
 topics: [modeling, architecture]
 kind: architecture
 ---

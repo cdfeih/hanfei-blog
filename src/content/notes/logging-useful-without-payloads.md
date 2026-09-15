@@ -2,7 +2,8 @@
 title: 排障日志需要多少数据：用端点、长度和指纹替代整包输出
 slug: logging-useful-without-payloads
 description: 从 LogSanitizer 的具体实现讨论日志如何保留关联线索，并说明截断、哈希指纹和 URL 清理各自的能力边界。
-status: draft
+status: published
+publishedAt: 2026-09-15
 topics: [architecture, management]
 kind: delivery
 ---

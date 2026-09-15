@@ -2,7 +2,8 @@
 title: 大型前端为什么要拆包：从建模平台的工作区边界谈起
 slug: pnpm-workspace-boundaries
 description: 结合建模平台的 pnpm 工作区，讨论图形引擎、React 适配、组件库和业务应用的职责，以及拆包后仍需验证的依赖边界。
-status: draft
+status: published
+publishedAt: 2026-09-15
 topics: [frontend, architecture]
 kind: architecture
 ---

@@ -2,7 +2,8 @@
 title: WebSocket 重连为什么不能只写一个定时器
 slug: websocket-reconnect-state-machine
 description: 从系统消息连接的初始化、发送等待和断开处理出发，讨论重连状态机、实例生命周期与业务恢复之间的关系。
-status: draft
+status: published
+publishedAt: 2026-09-15
 topics: [frontend, architecture]
 kind: decision
 ---

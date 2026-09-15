@@ -2,7 +2,8 @@
 title: 同一个元素为什么会读错缓存：把工程、分支和版本放进身份
 slug: version-aware-cache-keys
 description: 从版本化元素缓存分析缓存键、跨工程引用、空结果缓存和返回对象的所有权，理解建模数据为何不能只用元素 ID 做缓存。
-status: draft
+status: published
+publishedAt: 2026-09-15
 topics: [modeling, architecture]
 kind: architecture
 ---

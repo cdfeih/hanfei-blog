@@ -2,7 +2,8 @@
 title: 定制 PixiJS 如何接入应用：真正要统一的是整条解析链路
 slug: local-pixijs-source-integration
 description: 从本地引擎入口、内部子包、Shader 和 Worker 四个方面，分析定制渲染引擎接入 Vite 时需要保持一致的边界。
-status: draft
+status: published
+publishedAt: 2026-09-15
 topics: [frontend, modeling]
 kind: decision
 ---

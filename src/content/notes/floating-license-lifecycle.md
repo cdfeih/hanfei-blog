@@ -2,7 +2,8 @@
 title: 浮动许可如何跟随页面生命周期：申请、占用与归还
 slug: floating-license-lifecycle
 description: 从路由守卫与建模许可 Hook 分析浮动许可的资源生命周期，区分界面可见性、席位状态和服务端授权。
-status: draft
+status: published
+publishedAt: 2026-09-15
 topics: [frontend, architecture]
 kind: architecture
 ---

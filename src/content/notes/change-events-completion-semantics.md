@@ -2,7 +2,8 @@
 title: 发出了变更事件，不代表所有工作已经完成
 slug: change-events-completion-semantics
 description: 从版本表事件发布器分析同步与异步监听、继承匹配、异常隔离和 Future 完成语义，避免把事件分发误当作一致性保证。
-status: draft
+status: published
+publishedAt: 2026-09-15
 topics: [architecture, modeling]
 kind: architecture
 ---

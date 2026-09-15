@@ -2,7 +2,8 @@
 title: 优化 barrel 导入之前，先守住模块语义
 slug: barrel-import-optimization
 description: 从建模平台的 Vite 插件封装出发，分析集中导出、默认导入、测试 mock 和性能验证之间的关系。
-status: draft
+status: published
+publishedAt: 2026-09-15
 topics: [frontend]
 kind: decision
 ---
