@@ -10,7 +10,8 @@ import ProjectSection from '../components/ProjectSection.astro';
 
 const notes = await getPublicNotes();
 const featured = notes[0];
-const rest = notes.slice(1, 3);
+// 首页渲染全部已发布文章：默认只展示最新 3 篇，分类筛选时展示该领域全部（见下方脚本）
+const rest = notes.slice(1);
 const hasNotes = notes.length > 0;
 // 项目区可展示最多 3 个与建模/架构相关的已发布文章链接
 const projectRelated = notes
@@ -78,8 +79,8 @@ const projectRelated = notes
           </p>
           <div data-note-list>
             {featured && <ArticleCard note={featured} />}
-            {rest.map((note) => (
-              <ArticleRow note={note} />
+            {rest.map((note, i) => (
+              <ArticleRow note={note} hidden={i >= 2} />
             ))}
           </div>
           <div class="empty-state" role="status" hidden data-topic-empty>
@@ -114,7 +115,8 @@ const projectRelated = notes
   </section>
 
   <script>
-    // 首页分类筛选：领域筛选作用于精选卡与文章行；结果展示前 3 篇，计数同步更新。
+    // 首页分类筛选：列表已渲染全部文章。“全部”只展示最新 3 篇；
+    // 选择分类时展示该领域全部文章（不受 3 篇限制），计数同步更新。
     const filterBox = document.querySelector('[data-topic-filter]');
     const list = document.querySelector('[data-note-list]');
     if (filterBox && list) {
@@ -132,8 +134,8 @@ const projectRelated = notes
         const matching = items.filter(
           (el) => topic === 'all' || topicsOf(el).includes(topic)
         );
-        // 首页最多展示筛选结果的前 3 篇
-        const visibleSet = new Set(matching.slice(0, 3));
+        // “全部”只展示最新 3 篇；分类视图展示该领域全部
+        const visibleSet = new Set(topic === 'all' ? matching.slice(0, 3) : matching);
         items.forEach((el) => {
           el.hidden = !visibleSet.has(el);
         });

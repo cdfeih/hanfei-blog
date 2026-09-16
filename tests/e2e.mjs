@@ -374,22 +374,29 @@ await test('F1 访问不存在路径返回 404 页面', async () => {
   const ctx = await browser.newContext();
   const page = await ctx.newPage();
 
-  await test('H1 首页点击“复杂前端”：精选卡与列表视觉切换', async () => {
+  await test('H1 首页点击“复杂前端”：展示该领域全部文章（不受首页 3 篇预览限制）', async () => {
     await page.goto(`${BASE}/#writing`);
     await page.click('#writing [data-topic="frontend"]');
     await page.waitForTimeout(100);
-    const vis = await page.$$eval('#writing [data-note]', (els) =>
-      els
-        .filter((e) => !e.hidden && getComputedStyle(e).display !== 'none')
-        .map((e) => e.getAttribute('href'))
+    const { vis, exp } = await page.$$eval('#writing [data-note]', (els) => {
+      const match = (e) => (e.dataset.topics ?? '').split(' ').includes('frontend');
+      const shown = (e) => !e.hidden && getComputedStyle(e).display !== 'none';
+      return {
+        vis: els.filter((e) => shown(e) && match(e)).map((e) => e.getAttribute('href')),
+        exp: els.filter(match).map((e) => e.getAttribute('href')),
+      };
+    });
+    expect(exp.length >= 1, `该领域文章数为 ${exp.length}`);
+    expect(vis.length === exp.length, `可见 ${vis.length} 篇，期望 ${exp.length} 篇`);
+  });
+
+  await test('H2 首页切回“全部笔记”恢复只显示最新 3 篇', async () => {
+    await page.click('#writing [data-topic="all"]');
+    await page.waitForTimeout(100);
+    const shown = await page.$$eval('#writing [data-note]', (els) =>
+      els.filter((e) => !e.hidden && getComputedStyle(e).display !== 'none').length
     );
-    expect(vis.length === 1 && vis[0].includes('atom-request-coalescing'), `可见 ${vis.join(',')}`);
-    const hiddenCount = await page.$$eval('#writing [data-note]', (els) =>
-      els.filter((e) => getComputedStyle(e).display === 'none').length
-    );
-    expect(hiddenCount === 2, `${hiddenCount} 个元素未隐藏`);
-    const note = await page.textContent('#writing [data-count-note]');
-    expect(note.includes('1'), `计数：“${note.trim()}”`);
+    expect(shown === 3, `可见 ${shown} 篇`);
   });
 
   await ctx.close();

@@ -5,15 +5,17 @@ import { withBase } from '../lib/urls';
 
 interface Props {
   note: Note;
+  /** 初始隐藏（SSR 输出 hidden 属性，避免无 JS 时闪现全部条目） */
+  hidden?: boolean;
 }
 
-const { note } = Astro.props;
+const { note, hidden = false } = Astro.props;
 const href = withBase(`/notes/${note.data.slug}/`);
 const kind = kindLabel(note.data.kind);
 const date = note.data.publishedAt ?? '';
 ---
 
-<a class="article-row" href={href} data-topics={note.data.topics.join(' ')} data-note>
+<a class="article-row" href={href} data-topics={note.data.topics.join(' ')} data-note hidden={hidden}>
   <span class="row-date">{date}</span>
   <div>
     <span class="small-category">
