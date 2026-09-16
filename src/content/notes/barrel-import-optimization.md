@@ -3,7 +3,7 @@ title: "一次 import 优化会丢掉什么：从默认导入到不完整导出�
 slug: barrel-import-optimization
 description: "执行项目的 barrel 包装器与 ResolverBuilder，分析默认导入修复、快速过滤漏判、缺失映射丢符号，以及为什么测试模式要保留包入口。"
 status: published
-publishedAt: 2026-09-15
+publishedAt: 2026-09-12
 topics: [frontend]
 kind: decision
 updatedAt: 2026-09-16

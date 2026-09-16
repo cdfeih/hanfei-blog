@@ -3,7 +3,7 @@ title: "导出显示成功，文件却没准备好：分页、管道上传与任
 slug: async-excel-task-lifecycle
 description: "追踪 Excel 导入导出的真实调用链，解释分页一致性、PipedStream 背压、上传 Future 的异常传播，以及持久化任务记录和恢复执行的区别。"
 status: published
-publishedAt: 2026-09-15
+publishedAt: 2026-09-11
 topics: [architecture, management]
 kind: delivery
 updatedAt: 2026-09-16
