@@ -1,68 +1,139 @@
 ---
-title: 浮动许可如何跟随页面生命周期：申请、占用与归还
+title: "页面切走了，许可申请才成功：把浮动许可当成异步资源管理"
 slug: floating-license-lifecycle
-description: 从路由守卫与建模许可 Hook 分析浮动许可的资源生命周期，区分界面可见性、席位状态和服务端授权。
+description: "从 LicenseGuard 与 useModelingLicense 的实际差异出发，复现框架切换时旧响应覆盖新权限，并推导取消、补偿释放和服务端租约身份。"
 status: published
 publishedAt: 2026-09-15
 topics: [frontend, architecture]
 kind: architecture
+updatedAt: 2026-09-16
 ---
 
-工程软件中的许可有时代表可同时使用某项能力的席位。用户打开一个模块时申请，离开时归还。与普通菜单权限相比，它多了一层随会话变化的资源状态。
+一个许可 Hook 写起来很短：进入页面申请，离开页面归还。但网络请求不会随页面生命周期自动停止。如果申请尚未完成就离开，先发出的归还与迟到的申请怎样对应？如果从框架 A 切到 B，A 的成功响应是否会放开 B 的操作？
 
-SE-MBSE 的前端将许可申请放进路由守卫，并为建模环境提供单独的 Hook。这个设计适合讨论一个常见问题：当 React 组件的生命周期遇到异步资源申请，怎样才能把占用与释放配对？
+SE-MBSE 的两个入口正好能用来分析这些问题。下面区分界面状态、客户端生命周期和服务端许可协议，不把“隐藏一个按钮”当作已经完成席位管理。
 
-## 当前实现如何连接页面与席位
+## 两个入口有不同的初始行为
 
-`LicenseGuard` 在 effect 中调用 `consumeLicense`，根据响应决定是否展示无许可页面；清理函数调用 `restoreLicense`。系统消息连接将它们分别表达为进入与离开类型的消息。
+`LicenseGuard` 初始 licenseState=1，先渲染 children，服务端拒绝或请求失败后才显示 NoLicense。effect 的依赖为空，清理时调用 restoreLicense(license)。
 
-建模环境的 `useModelingLicense` 使用类似机制，但额外处理只读场景。当前代码中，禁用申请的只读分支直接允许查看；需要申请时则等待响应。
+`useModelingLicense` 初始 isAllowed=false；disabled 为真时允许查看并直接返回，不申请许可；否则申请 frameCode，在 effect 清理时归还。依赖包括 disabled 与 frameCode。
 
-这样的封装让页面不必各自重复通信细节，但它仍然要面对时间顺序问题。
+| 情况 | LicenseGuard | useModelingLicense |
+| --- | --- | --- |
+| 申请未完成 | 默认展示内容 | 首次挂载默认不允许 |
+| 只读模式 | 此入口未表达该条件 | disabled=true 直接允许 |
+| 许可标识变化 | 同一实例的空依赖 effect 不重跑 | 清理旧 effect，再申请新许可 |
+| 申请失败 | 展示无许可页 | isAllowed=false |
 
-## 页面卸载时，申请可能还在路上
+路由构建器给 Guard 设置了包含许可和路径的 key，可以通过重新挂载触发生命周期；不能把“effect 空依赖”单独当作所有路由都不会更新。但直接复用同一组件实例时，仍需明确 key 或依赖如何变化。
 
-设想用户迅速进入页面，又立即切走：
+Guard 的乐观显示适合怎样的用户体验，应由产品决定；写操作是否合法，仍需要服务端判断。本文未检查完整服务端权限链，不据此前端行为推断越权。
 
-```text
-页面挂载 → 发出申请
-页面卸载 → 发出归还
-申请响应稍后到达
+## 从 A 切到 B，旧 Promise 不会自动作废
+
+Hook 的核心逻辑是：
+
+```ts
+useEffect(() => {
+  if (disabled) {
+    setIsAllowed(true)
+    return
+  }
+  wsStore.consumeLicense(frameCode)
+    .then(res => setIsAllowed(res.code === 200))
+    .catch(() => setIsAllowed(false))
+
+  return () => {
+    wsStore.restoreLicense(frameCode)
+  }
+}, [disabled, setIsAllowed, frameCode])
 ```
 
-如果服务端看到的顺序、客户端处理顺序与预想不同，就不能单靠“一次申请对应一次清理函数”证明席位已经正确释放。
+A 申请未完成时切到 B，会执行 A 的清理并启动 B 的申请，但 A 的 then 仍然存在：
 
-更可靠的协议可以引入一次占用的唯一标识，将归还关联到具体占用，而不是只依赖模块名称。也可以在服务端按会话进行幂等处理，明确重复进入、重复离开和断开连接后的收敛规则。
+```text
+申请 A
+切换 B：发出归还 A，申请 B
+B 返回拒绝：isAllowed=false
+A 迟到成功：isAllowed=true
+当前屏幕仍然是 B
+```
 
-这些属于协议设计建议，不能从前端调用本身推断后端已全部实现。
+我们执行原 Hook 的编译快照，用替身控制 effect 清理和 Promise 完成顺序，得到：
 
-## 先展示还是先等待，是显式产品选择
+```text
+license/late-response: B denied, then A success => B.allowed=true
+```
 
-当前通用路由守卫的初始状态是允许展示，收到失败结果再切换；建模 Hook 则从未允许状态开始。这两种选择给用户的体验不同。
+这是 Hook 函数体的隔离验证，没有运行真实 React DOM，也没有向许可服务发送请求。
 
-| 策略 | 用户看到什么 | 需要注意什么 |
-| --- | --- | --- |
-| 先显示，失败后收回 | 页面响应更直接 | 申请完成前哪些操作允许发生 |
-| 先等待，成功后显示 | 状态边界更明确 | 加载、超时和重试如何表达 |
+还有一个较短的窗口：A 已成功后切到 B，effect 没在开始时先把 isAllowed 置为 false。因此 B 的结果到达前，界面会暂时沿用 A 的 true。仅过滤迟到结果还不够，还要定义新资源进入 pending 时怎样展示。
 
-它们都不能替代服务端权限校验。界面是否渲染、当前会话是否持有席位、某个写操作是否获准，是不同层面的判断。
+## 忽略旧响应，只解决界面状态
 
-## effect 的清理不是浏览器退出承诺
+用 effect 内的 disposed 标志可以避免卸载后更新状态：
 
-在组件正常卸载时，清理函数是自然的释放位置。但关闭进程、网络中断或页面崩溃时，不能假定某次归还请求必然送达。
+```ts
+useEffect(() => {
+  let disposed = false
+  setState({ status: 'pending', frameCode })
+  acquire(frameCode).then(result => {
+    if (!disposed) setState(toState(result))
+  })
+  return () => { disposed = true }
+}, [frameCode])
+```
 
-因此席位的最终回收能力应放在服务端，例如结合连接断开、租约到期或定期对账。前端归还负责及时性，服务端回收负责补足异常路径。
+这是候选片段，不是完整修复。若服务端已经授予席位，只忽略成功响应会泄漏远端资源。问题要拆成两个动作：
 
-React 开发环境的 Strict Mode 还可能额外执行一轮 effect 的 setup 与 cleanup，以帮助发现资源生命周期问题。许可协议应能面对重复申请与释放，而不是把它们都视为不可能发生的调用。[React effect 生命周期说明](https://react.dev/reference/react/useEffect)
+1. 这个响应还能不能更新当前界面？
+2. 它代表的许可是否已经取得，是否需要补偿归还？
 
-## 验证资源状态，而不只是页面状态
+两个问题不能都靠 setState 解决。需要让申请结果携带足以识别占用的身份，清理时取消未完成申请，或者在迟到成功后归还那次申请实际取得的占用。
 
-我会为这类功能准备几条完整路径：进入并离开、申请被拒绝、申请期间离开、连接断开、重复进入，以及只读模式切换为可编辑模式。
+## 为什么只靠 moduleCode 不够表达完整生命周期
 
-每条路径都检查两个结果：界面有没有给出准确反馈；服务端席位数量最终是否符合预期。如果只断言“无许可页面出现”，可能遗漏已经多占或未归还的席位。
+当前客户端发送的是 LicenseEnter/LicenseLeave 加 moduleCode，没有在这一层看到独立 leaseId。服务端是否另有会话计数或幂等机制，需要继续核对其实现；不能从客户端参数直接判定席位一定泄漏。
 
-组件负责呈现与触发，连接负责传输，服务端负责席位状态的最终约束。把这三层职责分别定义清楚，浮动许可才能经得起快速切页和异常退出。
+但一个能处理乱序和重试的协议至少要回答：
 
-## 实现线索
+```text
+acquire(moduleCode, requestId, sessionGeneration)
+    → granted(leaseId, expiresAt)
 
-对应 `LicenseGuard`、`useModelingLicense` 以及 `wsStore` 的许可消息方法。本文讨论的是生命周期设计，没有将前端守卫当作完整授权体系，也未执行真实席位分配测试。
+release(leaseId, operationId)
+    → released 或 alreadyReleased
+```
+
+requestId 用来识别重试是不是同一次申请，leaseId 识别具体占用，sessionGeneration 区分重连前后的会话。这里是协议设计示意，没有宣称项目已经提供这些字段。
+
+如果服务端按“用户+模块”共享一个席位，两个标签页同时进入时，关闭其中一个不能直接释放另一个仍使用的资源。这时可采用服务端会话集合或引用计数，但必须明确计数由哪一端维护，以及异常断链后如何回收。
+
+## 释放失败必须进入资源状态，而不只是控制台
+
+当前清理调用 restoreLicense，没有 await，也没有显式处理拒绝。React effect 清理本身不能靠等待远端响应来阻塞卸载，因此归还应交给独立资源管理器，记录 releasing/released/failed，而不是要求页面留在原地。
+
+网络失败时可以重试幂等 release；长时间失联则需要服务端租期或连接回收作为兜底。不能靠页面 unload 一次发送来保证每次归还都到达。
+
+这里还依赖传输层：wsStore.beforeSend 会等待连接成功；底层 sendAsPromise 的本地超时来自第三个参数，而目前许可调用把 timeout 放进消息体。因此“清理已经调用了归还函数”与“归还已发出、已成功”之间存在多个状态。传输层细节见[WebSocket 重连分析](../websocket-reconnect-state-machine/)。
+
+## 如何把组件代码变薄
+
+建议由一个许可管理器持有申请状态、requestId、leaseId、取消与重试。组件只订阅某资源的状态：
+
+```text
+idle → acquiring → granted → releasing → released
+             ↓         ↓
+           denied    expired
+             ↓
+            error
+```
+
+切换 A 到 B 时，组件解绑 A 并绑定 B；A 的迟到结果由管理器负责补偿，不再修改 B 的状态。对只读模式，可以绑定“不需要占用”的视图状态，但不能复用其他许可的 granted 标志。
+
+验收重点不是“申请成功按钮亮了”，而是精确控制顺序：申请 A 后切 B；B 拒绝后 A 成功；释放先到申请后到；同用户两个标签页先后退出；重连后收到旧会话响应。只有每个顺序都能解释席位归属，页面生命周期才与资源生命周期对齐。
+
+## 复现与源码
+
+[源码隔离实验](../../examples/engineering-labs/README.md)包含旧响应覆盖断言。源码：`client/src/routes/guard.tsx`、`client/src/stores/wsStore.ts`、`client/packages/utils/src/websocket/websocket.ts`，提交 `67b9805a06`。文中的租约协议属于候选设计，未修改服务端许可实现。

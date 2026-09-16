@@ -2,68 +2,53 @@
 
 作者定位：韩飞，SE-MBSE 项目负责人，关注技术方案、架构设计与团队交付。
 
-本辑共 15 篇，写作日期为 2026-09-15。文章从当前工程实现提炼问题、设计取舍和验证方法，使用独立示例解释原理。全部保存为 `draft`，可在本地逐篇预览，生产构建不会生成这些文章。
+截至 2026-09-16，本辑 15 篇均已完成深度重写：此前完成版本缓存篇，本轮完成其余 14 篇。各篇围绕具体调用链、失败条件和验证方法展开。保留现有 published 状态与发布日期，本次修改仍在本地，未推送或部署。
 
-## 文章目录与建议阅读顺序
+## 文章目录
 
-| 顺序 | 文章 | 主要看点 |
+| 顺序 | 文章 | 验证依据 |
 | --- | --- | --- |
-| 1 | [多模块不等于微服务：建模平台的 API、实现与启动边界](../src/content/notes/modular-monolith-api-service.md) | 模块边界与部署边界，适合作为本辑入口 |
-| 2 | [大型前端为什么要拆包：从建模平台的工作区边界谈起](../src/content/notes/pnpm-workspace-boundaries.md) | 引擎、框架适配与业务应用的职责 |
-| 3 | [定制 PixiJS 如何接入应用：真正要统一的是整条解析链路](../src/content/notes/local-pixijs-source-integration.md) | 入口、子包、Shader 与 Worker |
-| 4 | [优化 barrel 导入之前，先守住模块语义](../src/content/notes/barrel-import-optimization.md) | 默认导入、开发构建与测试替身 |
-| 5 | [三个组件请求同一份数据：用共享 Promise 合并在途请求](../src/content/notes/atom-request-coalescing.md) | 请求身份、缓存状态与刷新竞争 |
-| 6 | [WebSocket 重连为什么不能只写一个定时器](../src/content/notes/websocket-reconnect-state-machine.md) | 连接状态、等待发送与业务恢复 |
-| 7 | [浮动许可如何跟随页面生命周期：申请、占用与归还](../src/content/notes/floating-license-lifecycle.md) | 许可资源与界面生命周期 |
-| 8 | [同一个元素为什么会读错缓存：把工程、分支和版本放进身份](../src/content/notes/version-aware-cache-keys.md) | 版本身份、跨工程引用与空结果缓存 |
-| 9 | [缓存写成功以后，数据库一定更新了吗？理解 Ignite 写后落库](../src/content/notes/ignite-write-behind-boundaries.md) | 写后缓冲、读路径与清理边界 |
-| 10 | [发出了变更事件，不代表所有工作已经完成](../src/content/notes/change-events-completion-semantics.md) | 监听顺序、异常隔离与 Future 范围 |
-| 11 | [一个浏览器断开，不代表一个用户离线：协同会话的资源清理](../src/content/notes/collaboration-session-cleanup.md) | 多标签页、主动清理与定期清理 |
-| 12 | [Excel 导入导出异步化之后，真正需要管理的是任务生命周期](../src/content/notes/async-excel-task-lifecycle.md) | 分页、进度、失败反馈与任务恢复 |
-| 13 | [排障日志需要多少数据：用端点、长度和指纹替代整包输出](../src/content/notes/logging-useful-without-payloads.md) | 可诊断性与日志字段的含义 |
-| 14 | [对接 OSLC 时，先确认拿到的是 RDF，再谈资源解析](../src/content/notes/oslc-rdf-parsing-boundaries.md) | 响应分类、资源身份与字面量语义 |
-| 15 | [从 Java 生成 TypeScript：自动化的难点在契约，不在文件数量](../src/content/notes/java-typescript-contract-generation.md) | 类型映射、校验语义与团队同步流程 |
+| 1 | [把字典服务拆出去之前：沿一次缓存失效检查模块边界](../src/content/notes/modular-monolith-api-service.md) | 静态调用链；未执行跨进程拆分 |
+| 2 | [拆成五个包以后，边界真的成立了吗：追踪建模前端的三种依赖图](../src/content/notes/pnpm-workspace-boundaries.md) | 包清单与解析配置静态核对 |
+| 3 | [接入本地 PixiJS 不能只改一个 alias：入口、子包、Shader 与 Worker](../src/content/notes/local-pixijs-source-integration.md) | 静态解析链；未跑应用图形渲染 |
+| 4 | [一次 import 优化会丢掉什么：从默认导入到不完整导出映射](../src/content/notes/barrel-import-optimization.md) | 执行源码快照；第三方 transform 使用记录输入的替身 |
+| 5 | [同一个请求只发一次之后：共享 Promise、刷新竞态与参数切换](../src/content/notes/atom-request-coalescing.md) | 执行源码快照；Jotai/React 调度替身 |
+| 6 | [重连定时器执行了，连接为什么没恢复：拆开 WebSocket 的两层生命周期](../src/content/notes/websocket-reconnect-state-machine.md) | 执行上下两层源码快照；连接、时钟与外部依赖替身 |
+| 7 | [页面切走了，许可申请才成功：把浮动许可当成异步资源管理](../src/content/notes/floating-license-lifecycle.md) | 执行 Hook 源码快照；未调用许可服务 |
+| 8 | [模型改名后为什么还会读到旧值：追踪版本缓存与失效竞态](../src/content/notes/version-aware-cache-keys.md) | 完整缓存读写链与 4 个 Guava 实验 |
+| 9 | [缓存事务提交以后，数据库写完了吗：追踪 Ignite 写后与分支装载](../src/content/notes/ignite-write-behind-boundaries.md) | 静态核对及容量推演；无集群、数据库测试 |
+| 10 | [Future 完成了，监听器却还没结束：版本事件的完成语义](../src/content/notes/change-events-completion-semantics.md) | 静态调用链 + 独立嵌套任务模型 |
+| 11 | [ConcurrentHashMap 也会丢会话：检查、移除与用户离线的三个边界](../src/content/notes/collaboration-session-cleanup.md) | 静态调用链 + 独立集合交错模型 |
+| 12 | [导出显示成功，文件却没准备好：分页、管道上传与任务终态](../src/content/notes/async-excel-task-lifecycle.md) | 静态调用链 + 独立分页模型 |
+| 13 | [日志脱敏函数也需要反例：非法 URL、短指纹与字符串长度](../src/content/notes/logging-useful-without-payloads.md) | 原始 Java 类编译运行，10 项断言 |
+| 14 | [RDF 解析成功，不代表选对了资源：从三元组走到业务 DTO](../src/content/notes/oslc-rdf-parsing-boundaries.md) | 静态解析链与图推演；未跑 Jena 或外部 OSLC |
+| 15 | [生成器遇到 @Size(min=0) 为什么卡住：类型映射背后的契约](../src/content/notes/java-typescript-contract-generation.md) | 原函数 AST 抽取后执行；独立数字解析模型；未执行完整生成器 |
 
-建议首批优先审阅第 1、5、8 篇：分别展示总体架构判断、前端实现深度和建模领域理解。后续按相关主题连续发布，方便读者形成完整认识。本表只是编辑建议，没有设置发布日期或自动发布任务。
+## 建议先读
+
+- 请求合并篇：有受控 Promise 复现，能看到“共享请求”与“刷新安全”的区别。
+- Excel 篇：完整追到分页、管道上传、文件地址和持久化终态。
+- Java → TypeScript 篇：原函数复现 Size(min=0) 卡住，再解释必填与协议精度。
+- 版本缓存篇：本辑已有的缓存深度案例。
 
 ## 本地阅读
-
-在博客目录运行：
 
 ```powershell
 pnpm dev --host 127.0.0.1 --port 4330
 ```
 
-访问 `http://127.0.0.1:4330/notes/<slug>/`，其中 `<slug>` 是文章文件名去掉 `.md` 后的部分。例如：
+访问 [工程笔记](http://127.0.0.1:4330/notes/)，从文章列表进入。所有本辑文章保持 published，会进入本地生产构建；原博客的 4 篇发布样例和 1 篇草稿样例没有改动。
 
-- [架构总览](http://127.0.0.1:4330/notes/modular-monolith-api-service/)
-- [请求合并](http://127.0.0.1:4330/notes/atom-request-coalescing/)
-- [版本缓存](http://127.0.0.1:4330/notes/version-aware-cache-keys/)
+## 实验与依据
 
-草稿使用直接地址预览，不会自动出现在公开文章列表。页面顶部的草稿提示属于博客现有功能。
+- [本轮 14 篇核验记录](se-mbse-deep-rewrite-02.md)：逐篇验证范围与源码入口。
+- [本轮源码指纹](se-mbse-deep-sources-02.json)：源码 HEAD 与实际文件 SHA-256。
+- [可运行工程实验](../public/examples/engineering-labs/README.md)：源码隔离、独立模型和 Java 工具类实验。
+- [版本缓存核验记录](version-cache-deep-review.md)与[Guava 实验](../public/examples/version-cache/README.md)。
+- [首版源码清单](se-mbse-article-sources-01.md)保留作历史依据；本轮新增结论以新的核验记录为准。
 
-## 写作与事实边界
+## 写作约束
 
-- 源码快照：`67b9805a064b68dffda405e2f1134e57b84859e1`。具体文件和校验值见[源码依据](se-mbse-article-sources-01.md)。源码后续变化时，应重新核对相关结论。
-- 文中“当前实现”来自本次阅读到的源码；改进方向、验证场景属于分析与建议。没有把建议写成已经落地的项目成果。
-- 未编造吞吐、耗时、团队规模、客户名称或事故经历；未将代码中的待办描述为已解决。
-- 示例名称与数据为说明原理而重写，没有复制访问凭据、内部地址或业务数据。仍应由作者根据项目内容公开范围决定最终发布版本。
-- 文章聚焦工程问题，避免使用未经确认的“我亲自设计了全部模块”等个人履历描述。个人决策背景可在后续提供真实经历后补充。
-- 原博客已有的 4 篇发布状态样例和 1 篇草稿样例保持原样。本辑没有替换它们；正式整理首页时，需另行决定保留、改写或撤下哪些样例。
+文章区分当前实现、已执行实验、静态推演和改造建议。没有编造线上事故、性能提升、团队规模或个人贡献。示例输入为虚构数据；没有写入真实访问凭据和内部服务地址。
 
-## 正式发布
-
-按[现有写作指南](writing-guide.md)逐篇将 `status: draft` 改为 `published`，填写真实 `publishedAt`，再执行 `pnpm check`、`pnpm build` 和 `pnpm verify`。
-
-如果希望首页优先展示某篇，可设置 `featuredOrder`，并与已有精选排序协调。没有封面的文章仍可使用现有正文排版，不必为发布强行补通用装饰图。
-
-本次在本地新增文章及维护文档，并修正文章表格在手机上撑宽页面的问题，没有提交、推送或部署。当前本地构建未配置 `SITE_URL`，使用博客的占位域名完成验证；部署前需按项目部署说明配置真实站点地址。
-
-## 内容与显示验证
-
-- 15 篇正文合计约 1.6 万汉字，不含元数据；各篇均有完整正文和实现线索。
-- 内容格式、唯一 slug、主题字段及 Astro 检查通过。
-- 15 个草稿地址均返回正常页面，标题、正文标题与 Markdown 表格正常生成。
-- 在 390px 手机视口逐篇检查，修正表格引起的整页溢出后，15 篇均无整页横向溢出。
-- 桌面抽查长标题和正文结构；手机抽查长标题、目录与正文排版。没有改动首页设计。
-- 生产构建与现有产物检查通过；另对本辑全部标题和 slug 扫描，确认没有进入生产产物。
+发布流程沿用[写作指南](writing-guide.md)。本地 check/build/verify 只能说明站点产物与内容格式符合检查，不能替代 SE-MBSE 的集成测试。正式部署时仍使用项目既有 SITE_URL 配置。

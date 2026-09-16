@@ -1,0 +1,10 @@
+url/valid: https://example.test/path
+url/malformed: https://alice:synthetic@example.test/a b
+mask/short: ***
+mask/long: abc***fgh
+fingerprint/abc: ba7816bf8f01
+payload/utf16-units: 3
+payload/utf8-bytes: 5
+control/crlf-tab: a___b
+control/unicode-retained: true
+PASS: 10 assertions against the unchanged production class

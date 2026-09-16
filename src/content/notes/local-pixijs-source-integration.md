@@ -1,67 +1,117 @@
 ---
-title: 定制 PixiJS 如何接入应用：真正要统一的是整条解析链路
+title: "接入本地 PixiJS 不能只改一个 alias：入口、子包、Shader 与 Worker"
 slug: local-pixijs-source-integration
-description: 从本地引擎入口、内部子包、Shader 和 Worker 四个方面，分析定制渲染引擎接入 Vite 时需要保持一致的边界。
+description: "拆解当前 Vite 的本地引擎解析链，说明 53 个子包别名、GLSL 文本转换、worker 前缀适配，以及开发入口与包产物的差异。"
 status: published
 publishedAt: 2026-09-15
 topics: [frontend, modeling]
 kind: decision
+updatedAt: 2026-09-16
 ---
 
-图形编辑器做到一定深度，需求会触及渲染引擎内部。此时项目里同时存在业务画布、适配组件和一份定制引擎源码，问题已经超出“安装一个图形库”的范围。
+定制图形引擎接入应用时，最迷惑的现象是“主入口已经指向本地源码，但某部分修改始终不生效”。原因可能不是缓存，而是引擎内部的子包仍从另一份依赖解析，或者 Shader、Worker 根本没进入同一条构建链。
 
-在 SE-MBSE 当前的 Vite 配置中，PixiJS 固定使用本地源码入口。旧架构说明曾描述多种解析模式，但当前实现里的 `PixiMode` 只保留 `source`。分析构建行为时，应该优先读取实际配置。
+SE-MBSE 当前配置固定使用 PixiJS source 模式。本文沿配置的实际执行位置拆开四类模块，不把旧文档中的“生产切 dist”当作现状。
 
-## 改一个入口，不一定能统一所有依赖
+## 主入口只解决第一跳
 
-最容易想到的做法，是把 `pixi.js` 指向本地源码。当前工程确实这样处理，但还做了另一件事：扫描本地引擎子包，为存在 `src/index.ts` 的包建立 `@pixi/*` alias。
-
-这一步解决的是解析一致性。假设应用从本地入口取得对象，而某个插件从另一份引擎子包取得类型或全局状态，就可能出现行为难以解释的组合。仅看顶层 import，未必能发现来源已经分叉。
-
-可以把接入过程理解为两层：
+Vite 中 pixi.js 的替换目标是：
 
 ```text
-pixi.js            → 本地引擎总入口
-@pixi/某个子包      → 同一份源码里的对应子包
+packages/pixijs-source/bundles/pixi.js/src/index.ts
 ```
 
-这里不必照搬项目的绝对路径。可迁移的原则是：入口与内部依赖必须指向同一套实现，并且在构建产物中验证这一点。
+配置将 PixiMode 限定为 source，实例也固定取 source。版本常量设置为 7.4.3-local，DEBUG 设置为 false。这里的 local 字样只是构建常量，不是完整的源码版本证明；定位某次修改仍应记录 Git 提交。
 
-## 源码包含的不只有 TypeScript
+主入口还会 import 引擎子包。配置扫描 packages/pixijs-source/packages，只对存在 src/index.ts 的目录生成别名：
 
-当前配置还处理了两类特殊资源。
+```ts
+readdirSync(localPixiPackagesRoot)
+  .filter(name => existsSync(resolve(localPixiPackagesRoot, name, 'src/index.ts')))
+  .map(name => ({
+    find: `@pixi/${name}`,
+    replacement: resolve(localPixiPackagesRoot, name, 'src/index.ts'),
+  }))
+```
 
-第一类是 `.frag`、`.vert` Shader 文件。自定义加载插件读取文本，再将其转成字符串模块。第二类是带 `worker:` 前缀的导入，解析实际文件后转换为 Vite 可以处理的 `?worker` 形式。
+按本次快照统计，共生成 53 项。这是目录扫描结果，不是通过浏览器网络请求测得的模块数量。
 
-这揭示了源码集成的真实工作量：你接管的不只是类和函数，还有引擎原本依赖的构建约定。
+## 为什么混用两份引擎不只是包体积问题
 
-| 资源 | 需要保持的语义 |
-| --- | --- |
-| TypeScript 模块 | 正确的入口与依赖来源 |
-| Shader | 原始文本完整进入运行时 |
-| Worker | 正确生成独立工作线程资源 |
-| 环境常量 | 编译结果使用预期的版本与调试条件 |
+假设核心类分别来自本地模块 A 和安装模块 B，即使源代码文本相同，类构造器也有不同身份：
 
-如果主页面能启动，却没有测试实际渲染与工作线程路径，接入仍可能只完成了最浅的一层。
+```js
+const A = class Texture {}
+const B = class Texture {}
+const value = new A()
+console.log(value instanceof B) // false
+```
 
-## 开发预处理与生产构建要一起看
+注册表、单例缓存也可能各有一份。于是“我修改的注册代码执行了”与“实际渲染读取的是这份注册表”并不等价。这里是 JavaScript 模块身份的示意，不是在宣称项目已经存在两份 Texture。
 
-当前 `optimizeDeps.exclude` 中包含 `pixi.js`、本地子包和多个内部能力包，配合源码 alias 使用。它表达了开发环境的依赖处理策略，不能单凭这一项推断生产构建是否成功。
+排查时应沿入口继续看内部 import 的 resolved id，而不是只在配置里搜索 pixi.js。当前配置同时将本地子包排除出 optimizeDeps，意图让这些源码保持一致的解析方式；但是否完全覆盖深层导入，仍需从真实使用模块验证。
 
-我会把验收拆成两份：开发时确认改动能反馈到画布；生产时确认入口、资源路径、Shader 内容和 Worker 资源都出现在预期位置。
+## GLSL 需要变成合法 JavaScript 模块
 
-对于定制引擎，生产产物还应能回答“这份引擎对应哪次源码变更”。源码目录存在，只说明材料在；并不自动形成可追溯的交付记录。
+引擎会导入 .frag、.vert。当前插件在 pre 阶段执行：
 
-## 为什么不同时维护很多模式
+```ts
+load(id) {
+  const filePath = id.split('?')[0]
+  if (!filePath || !/\.(frag|vert)$/.test(filePath)) return null
+  return `export default ${JSON.stringify(readFileSync(filePath, 'utf8'))}`
+}
+```
 
-多模式看起来灵活，但每增加一种模式，就多出一组需要维护的依赖组合。如果源码、编译产物和官方包已经存在差异，它们可能不是可互换选项。
+它先剥离查询参数，再读文件，输出默认导出的字符串。这里 JSON.stringify 不是装饰：Shader 中含换行、引号和反斜杠，必须转义成合法的 JS 字符串。
 
-当前固定源码模式，让开发与构建采用同一个接入方向；是否因此降低维护成本，需要结合团队的实际交付流程判断。这里不能从一个配置常量反推历史决策的全部理由。
+如果直接把文本拼进双引号，下面的源码就能破坏生成模块：
 
-更稳妥的做法，是先列清自己真正需要支持的路径，再为每条路径准备最小渲染验证。一个场景可以包含文字、图形、缩放、资源加载和页面销毁，避免只测“能创建一个画布”。
+```glsl
+// a "quoted" label
+void main() {
+    gl_FragColor = vec4(1.0);
+}
+```
 
-定制引擎集成的完成标志，是整条解析和资源链路一致，并能稳定重现。顶层包名只是入口。
+该插件做的是资源格式适配，不负责验证 GLSL 是否可在目标 GPU 编译。Vite 构建通过，仍不能替代浏览器端着色器编译与渲染检查。
 
-## 实现线索
+此外插件按扩展名匹配所有被加载文件，并没有限制到本地 Pixi 根目录。如果应用其他部分也有 GLSL，是否希望采用同样转换规则，应写成明确约束。
 
-对应 `getPixiEntry`、`getLocalPixiPackageAliases`、`pixiShaderRawPlugin`、`pixiWorkerImportPlugin` 与 Vite 的 `resolve`、`optimizeDeps` 配置。本文是静态源码分析，未对引擎执行性能基准测试。
+## Worker 前缀是另一套模块协议
+
+源码中存在 worker: 前缀导入。Vite 插件处理为：
+
+```ts
+if (!source.startsWith('worker:') || !importer) return null
+const resolved = await this.resolve(source.slice('worker:'.length), importer, {
+  skipSelf: true,
+})
+if (!resolved) return null
+return `${resolved.id}?worker`
+```
+
+为什么不能直接 source.replace？因为相对路径的基准是 importer，不是应用根目录。先调用 this.resolve 才能沿正常解析规则得到目标；skipSelf 防止再次进入当前前缀处理。最后的 ?worker 交给 Vite 后续 Worker 机制。
+
+需要专门覆盖目标已带查询参数的情况，不能默认 resolved.id 永远是裸路径；这种输入应有固定样例，确认拼接结果不会变成两个问号。本文没有在源码中确认此类导入实际出现，所以把它列为转换契约的边界，不写成既有故障。
+
+## 缺源码时，warn 不等于可继续运行
+
+配置先检测本地 packages 目录，不存在时打印警告，随后仍调用 getLocalPixiPackageAliases，而该函数直接 readdirSync。缺失目录时扫描会抛错，不能因为日志使用 warn 就以为会自动回退 npm 版本。
+
+这对新机器和 CI 很实际：是否需要获取完整引擎源码，应在准备步骤就确定。若支持回退，必须将别名、Shader、Worker、预构建配置整体切到同一模式；只给主入口加回退会重新制造混合图。
+
+当前最清晰的契约是要求源码存在，并在检查阶段给出明确错误。本文未修改配置，只指出实际控制流。
+
+## 用四层证据确认接入
+
+建议按下列顺序验证一次引擎改动：
+
+1. 确认应用入口的 resolved id 指向指定 checkout。
+2. 选择一个真实使用的 @pixi 子包，确认没有绕到安装目录。
+3. 找一个实际 Shader 导入，检查构建输出是正确转义的文本。
+4. 找一个真实 Worker 功能，检查资源路径在部署子目录下仍成立，再观察功能结果。
+
+还要分开测试应用和包消费者：pixichart 清单用 file 依赖指向本地 bundle，但应用 Vite 可以绕过该清单去读 src；React 包的独立构建和 Storybook 也有自己的入口。应用中能断点，不代表发布包包含了同一份修改。
+
+这次结论基于配置、依赖清单和 53 个别名的静态统计，没有启动完整建模应用或测量帧率。源码为 `client/vite.config.ts` 及 `packages/pixichart/package.json`、`packages/reactPixichart/package.json`，提交 `67b9805a06`。理解这条解析链，才能把“本地引擎生效”变成可核对的事实。

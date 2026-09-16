@@ -1,0 +1,17 @@
+atom/shared: same-promise=true, fetch-count=1
+atom/refresh: NEW completed first, final-cache=OLD
+atom/params: requested=A, B.inited=false
+atom/failure: retry-fetch-count=2
+socket/default-close: reconnect-timers=0
+socket/timeout: payload-field=0 timers, third-argument=1 timer
+socket/interval-zero: reconnect-delay=0
+socket/store-retry: timer-fired=true, native-sockets=1
+license/late-response: B denied, then A success => B.allowed=true
+barrel/wrapper: default-preserved=true, @/common=skipped
+resolver/map: Known retained, Missing removed; apply=serve
+pagination/offset: exported=1,2,4; skipped=3
+events/nested: outer-complete=true while child-complete=false
+sessions/check-then-remove: newly-added-session-lost=true
+contract/long: 9007199254740993 -> 9007199254740992
+contract/required: min=1 returns true; min=0 hits VM timeout
+PASS: 16 checks; source snapshots plus 4 explicitly labeled model experiments

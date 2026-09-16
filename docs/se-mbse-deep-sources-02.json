@@ -1,0 +1,320 @@
+{
+  "date": "2026-09-16",
+  "commit": "a7672e12ced60c850f12febcd199358bc63979fa",
+  "articles": {
+    "modular-monolith-api-service": {
+      "scope": "静态调用链；未执行跨进程拆分",
+      "files": [
+        {
+          "path": "server/pom.xml",
+          "sha256": "89cbcf98662c251a35869be54b5cd85fa5ead877523e78cbf7b5a4baa7de4bc4"
+        },
+        {
+          "path": "server/mbse-platform-web/pom.xml",
+          "sha256": "f26a2b42340a0104a5da0c2314e149582bef147dd6e88c33c52b3a349c3358a2"
+        },
+        {
+          "path": "server/mbse-platform-web/src/main/resources/application.properties",
+          "sha256": "0816623f7a4402ae9716b3a1631b124829424eedba3d2fd7bebadfccd0bb8390"
+        },
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/dubbo/DubboConfig.java",
+          "sha256": "56e1f739ddbc3549e01de58339da3097709535bb8b20beaa9e5756b08c5aaed3"
+        },
+        {
+          "path": "server/mbse-platform-project/mbse-platform-project-service/src/main/java/com/shareetech/mbse/platform/project/metamodel/cache/manager/DictCacheManager.java",
+          "sha256": "0ef6e7799a1dada59edac782cecc7d5b22b7828e6fa10fcc1d557de906f70879"
+        },
+        {
+          "path": "server/mbse-platform-sys/mbse-platform-sys-api/src/main/java/com/shareetech/mbse/platform/system/api/service/SysDictExternalService.java",
+          "sha256": "78c6f16309daef6ace581f0155a53c76c609c0aeea1349bf4b9241d02e1fa31a"
+        },
+        {
+          "path": "server/mbse-platform-sys/mbse-platform-sys-api/src/main/java/com/shareetech/mbse/platform/system/api/event/DictItemsChangedEvent.java",
+          "sha256": "1dc28b6a9649e8444f577051e002de083e6c9ba6e71395c295f02ce19d30b8dd"
+        },
+        {
+          "path": "server/mbse-platform-sys/mbse-platform-sys-service/src/main/java/com/shareetech/mbse/platform/system/api/SysDictExternalServiceApiImpl.java",
+          "sha256": "cff8cbb59c7c50899d423d85244f6d66f22079ca57664da742e53490560b289c"
+        },
+        {
+          "path": "server/mbse-platform-sys/mbse-platform-sys-service/src/main/java/com/shareetech/mbse/platform/system/service/impl/SysDictServiceImpl.java",
+          "sha256": "3abc0fa1c2b08e1c1b73917fd6f8dde610c333a4d79db48f65eb38e6a3b18739"
+        }
+      ]
+    },
+    "pnpm-workspace-boundaries": {
+      "scope": "包清单与解析配置静态核对",
+      "files": [
+        {
+          "path": "client/pnpm-workspace.yaml",
+          "sha256": "38b887ad12b22f5b6fb356933a78f81686b242d8819c7efff6a3c5f2f4929162"
+        },
+        {
+          "path": "client/package.json",
+          "sha256": "a3683b691a371634e350371d34d77fb4bb33385415cb1475340d7074ce6e4d5c"
+        },
+        {
+          "path": "client/packages/pixichart/package.json",
+          "sha256": "cc8b8925b8f1c19d055039d3ba4d2c7291d9ffe233f089280352d7dfd932892d"
+        },
+        {
+          "path": "client/packages/reactPixichart/package.json",
+          "sha256": "0259a06f4c9e9de57909b363d77f839a6969d6fb514e1ff4525d28a51fcaf0d8"
+        },
+        {
+          "path": "client/packages/icons/package.json",
+          "sha256": "307beebeecab734a96c20684749ce62d458f97fffee8bb24881c18a0e14bbfcc"
+        },
+        {
+          "path": "client/packages/ui/package.json",
+          "sha256": "cbf9db5db4b63b2ddc10bde712fb5f424b381976362585aea8bb383806dfcbe5"
+        },
+        {
+          "path": "client/packages/utils/package.json",
+          "sha256": "f0e8463c796a37658276977868f224b0f92e335ce97776aec2f978ccf81bad13"
+        },
+        {
+          "path": "client/vite.config.ts",
+          "sha256": "71224c44e2a0c1aac5db0a83c3d8dec4e60807a0a57a54d1223468acf2af32c5"
+        },
+        {
+          "path": "client/packages/resolverUtils.ts",
+          "sha256": "268854c59f6364702c412b718aef0b8964caf946857f1baee7ee48adf0d0ac2b"
+        }
+      ]
+    },
+    "local-pixijs-source-integration": {
+      "scope": "静态解析链；未跑应用图形渲染",
+      "files": [
+        {
+          "path": "client/vite.config.ts",
+          "sha256": "71224c44e2a0c1aac5db0a83c3d8dec4e60807a0a57a54d1223468acf2af32c5"
+        },
+        {
+          "path": "client/packages/pixijs-source/bundles/pixi.js/package.json",
+          "sha256": "84f76134792a1c216b33a612fbcc52221f43c77db5248783048c1738103e2900"
+        },
+        {
+          "path": "client/packages/pixijs-source/bundles/pixi.js/src/index.ts",
+          "sha256": "48a6cedf6ff3ae885149722ae0de7e60f697588059dbad9b38f4b9d75ced80ff"
+        },
+        {
+          "path": "client/packages/pixichart/package.json",
+          "sha256": "cc8b8925b8f1c19d055039d3ba4d2c7291d9ffe233f089280352d7dfd932892d"
+        },
+        {
+          "path": "client/packages/reactPixichart/package.json",
+          "sha256": "0259a06f4c9e9de57909b363d77f839a6969d6fb514e1ff4525d28a51fcaf0d8"
+        }
+      ]
+    },
+    "barrel-import-optimization": {
+      "scope": "执行源码快照；第三方 transform 使用记录输入的替身",
+      "files": [
+        {
+          "path": "client/plugins/vite-barrel-resolution.ts",
+          "sha256": "555f882437d1c6155e4df82aab402e656f3829131e381bfe584134874794dca9"
+        },
+        {
+          "path": "client/packages/resolverUtils.ts",
+          "sha256": "268854c59f6364702c412b718aef0b8964caf946857f1baee7ee48adf0d0ac2b"
+        },
+        {
+          "path": "client/packages/pixichart/scripts/resolver.ts",
+          "sha256": "8c2b98389b83780943396027551686d08bca05f308d6b7664a69e5eda9fd9de1"
+        },
+        {
+          "path": "client/packages/reactPixichart/scripts/resolver.ts",
+          "sha256": "c325dbc98b56894490c3c17b70ea55d134b85b93a6ec031b6b3d1a40c19d209a"
+        },
+        {
+          "path": "client/vite.config.ts",
+          "sha256": "71224c44e2a0c1aac5db0a83c3d8dec4e60807a0a57a54d1223468acf2af32c5"
+        }
+      ]
+    },
+    "atom-request-coalescing": {
+      "scope": "执行源码快照；Jotai/React 调度替身",
+      "files": [
+        {
+          "path": "client/src/common/hooks/createAtomFetcher.ts",
+          "sha256": "b7b807c2472f97f7e7da7a0811abb7f251e72a0a642977ed5d97b658b94eeee3"
+        }
+      ]
+    },
+    "websocket-reconnect-state-machine": {
+      "scope": "执行上下两层源码快照；连接、时钟与外部依赖替身",
+      "files": [
+        {
+          "path": "client/src/stores/wsStore.ts",
+          "sha256": "9fa3e5e7341a2d68360290a6a685f275d84df7eafd5613a6848c189602a63f64"
+        },
+        {
+          "path": "client/packages/utils/src/websocket/websocket.ts",
+          "sha256": "8fb4c70af35ed8ef78c9b11f21d0f0c87459a4a808c82fa3dacd7a8781fc94de"
+        },
+        {
+          "path": "client/packages/utils/src/observers/obser.ts",
+          "sha256": "23236716749dd83ab3bff0659cb91225b37d94643ddb4d027d44c2395c175f86"
+        }
+      ]
+    },
+    "floating-license-lifecycle": {
+      "scope": "执行 Hook 源码快照；未调用许可服务",
+      "files": [
+        {
+          "path": "client/src/routes/guard.tsx",
+          "sha256": "89a835d194755750bba7d4617b65a624e2b96d8fc738e176b608780ebcb8a0f8"
+        },
+        {
+          "path": "client/src/stores/wsStore.ts",
+          "sha256": "9fa3e5e7341a2d68360290a6a685f275d84df7eafd5613a6848c189602a63f64"
+        },
+        {
+          "path": "client/packages/utils/src/websocket/websocket.ts",
+          "sha256": "8fb4c70af35ed8ef78c9b11f21d0f0c87459a4a808c82fa3dacd7a8781fc94de"
+        }
+      ]
+    },
+    "ignite-write-behind-boundaries": {
+      "scope": "静态核对及容量推演；无集群、数据库测试",
+      "files": [
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/ignite/IgniteCacheManager.java",
+          "sha256": "61fa44ec175c5a75964b2ab4394aaf9d9c1bbb99de3740bde5a7d66ef894f5f6"
+        },
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/ignite/sync/JdbcEntityStoreFactory.java",
+          "sha256": "5ac1faec9e0e792fd77fb77e7f0e7de0dde214af9a47933e71649226c65af4fd"
+        },
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/ignite/sync/JdbcEntityStore.java",
+          "sha256": "637d74ddd53e0f8ea9071c1d4328b6bae7b813fb9b99ed355367fa90acf2e722"
+        },
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/ignite/sync/AbstractJdbcStore.java",
+          "sha256": "7e4ede5a2ef7fa1f48e959530323d21e8d7319e3f178c356f6f2f272b2a9d194"
+        },
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/ignite/metric/CacheStoreMetricsBinder.java",
+          "sha256": "7eefd05049ee169f9764492200892a9dc34c9872c5a1239f3ed8aa20cf5d011a"
+        }
+      ]
+    },
+    "change-events-completion-semantics": {
+      "scope": "静态调用链 + 独立嵌套任务模型",
+      "files": [
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/ignite/event/VersionTableChangeEventPublisher.java",
+          "sha256": "e3e2433eea8934454d0c939456556a9c9c97068f8c1b368690b0a2fb5ed63144"
+        },
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/ignite/event/VersionTableChangeMethodListener.java",
+          "sha256": "ebd2d6b4fece7966085c795260084d16e7f9badbac38466b8d3dfd1b1cc345cc"
+        },
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/ignite/event/VersionTableChangeEvent.java",
+          "sha256": "aaa1cc8b5020138738a2fd3a99669ad1afea799b4389415ba469024cdf3d4a58"
+        },
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/ignite/event/VersionTableChange.java",
+          "sha256": "af11261ce969414cc31be24148ef2daa7fe7b90b1e6af7828be6022b034e6f94"
+        },
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/ignite/event/VersionTableChangeListener.java",
+          "sha256": "1f745347bf27bd4498b6d55605982bd8ecc59fdec43e58828973f1886a4b6dd3"
+        },
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/ignite/transaction/IgniteTransactionTemplate.java",
+          "sha256": "3fcadd75034ecac0425cc9c658ee92e788453577dd12435c1f18fb33dda64f26"
+        },
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/ignite/transaction/IgniteTransactionAspect.java",
+          "sha256": "7e100470ce1a7c91eb33f119ba7b54f3cf58f3e20d1d039c1d399c19d135cc05"
+        },
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/config/ThreadExecutorConfig.java",
+          "sha256": "5bc92314817d1393936bab87e1b87fcfc7c55c70ae7b2ec8c0252a67c97a8201"
+        },
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/config/ContextPropagatingExecutorService.java",
+          "sha256": "45e19bd5ac3357c6efc9ae71943fc3630fbf15f286b910d2512898fe2db571cf"
+        }
+      ]
+    },
+    "collaboration-session-cleanup": {
+      "scope": "静态调用链 + 独立集合交错模型",
+      "files": [
+        {
+          "path": "server/mbse-platform-project/mbse-platform-project-service/src/main/java/com/shareetech/mbse/platform/project/websocket/CollaborativeSessionManager.java",
+          "sha256": "a95ebc84dd9d267271fa18b73e2441d692262c55de5e13a580b1b5670ca87474"
+        }
+      ]
+    },
+    "async-excel-task-lifecycle": {
+      "scope": "静态调用链 + 独立分页模型",
+      "files": [
+        {
+          "path": "server/mbse-platform-sys/mbse-platform-sys-service/src/main/java/com/shareetech/mbse/platform/asyncexcel/importer/AsyncExcelImporter.java",
+          "sha256": "b0b8d47aef8d35c517b5e2fa0d7687310d188aaf2621eeb0b9dbf0417e1c50a0"
+        },
+        {
+          "path": "server/mbse-platform-sys/mbse-platform-sys-service/src/main/java/com/shareetech/mbse/platform/asyncexcel/importer/AsyncPageReadListener.java",
+          "sha256": "c5388d41d78a5f6f437cef9bf8c7195d6738d1496fab56c0497ea5da9aaeaff5"
+        },
+        {
+          "path": "server/mbse-platform-sys/mbse-platform-sys-service/src/main/java/com/shareetech/mbse/platform/asyncexcel/importer/AsyncImportTaskSupport.java",
+          "sha256": "513acf5ef0c59f3272597bcbed5ac9fb4d4748ad300b2a4cc6e6a71f91635ca6"
+        },
+        {
+          "path": "server/mbse-platform-sys/mbse-platform-sys-service/src/main/java/com/shareetech/mbse/platform/asyncexcel/exporter/AsyncExcelExporter.java",
+          "sha256": "225acc036e225e80cde9c8f9e2e31ed0997489bdac88d1af84461d3e1e4783eb"
+        },
+        {
+          "path": "server/mbse-platform-sys/mbse-platform-sys-service/src/main/java/com/shareetech/mbse/platform/asyncexcel/exporter/AsyncExportTaskSupport.java",
+          "sha256": "055cc7174c1b129520d4bfa420ecb0acf02546bb494ade751cbb5809e9eb9dae"
+        }
+      ]
+    },
+    "logging-useful-without-payloads": {
+      "scope": "原始 Java 类编译运行，10 项断言",
+      "files": [
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/util/LogSanitizer.java",
+          "sha256": "f50361aacfff641e25ed55f4f6a0628e0f17591cfdc5d7a64256fe9736a3a1fe"
+        },
+        {
+          "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/ignite/event/VersionTableChangeEventPublisher.java",
+          "sha256": "e3e2433eea8934454d0c939456556a9c9c97068f8c1b368690b0a2fb5ed63144"
+        }
+      ]
+    },
+    "oslc-rdf-parsing-boundaries": {
+      "scope": "静态解析链与图推演；未跑 Jena 或外部 OSLC",
+      "files": [
+        {
+          "path": "server/mbse-platform-adapter/mbse-platform-adapter-service/src/main/java/com/shareetech/mbse/platform/adapter/oslc/parser/OslcRdfModelReader.java",
+          "sha256": "b584771ceeece38e5554a957aef8e1ae32d42a607cd9d741d434266d022348d2"
+        },
+        {
+          "path": "server/mbse-platform-adapter/mbse-platform-adapter-service/src/main/java/com/shareetech/mbse/platform/adapter/oslc/parser/OslcResourceParser.java",
+          "sha256": "8c8b286eee0e7e3553c6db6dcbf233bc5830b57b484d674e9fa532ffef88b0e8"
+        },
+        {
+          "path": "server/mbse-platform-adapter/mbse-platform-adapter-service/src/main/java/com/shareetech/mbse/platform/adapter/oslc/parser/constants/OslcRdfProperties.java",
+          "sha256": "378623fe89b7e4dda1bae52d1dbc74329d0acb847ad1e7bad51f4b28bd0cf8b6"
+        }
+      ]
+    },
+    "java-typescript-contract-generation": {
+      "scope": "原函数 AST 抽取后执行；独立数字解析模型；未执行完整生成器",
+      "files": [
+        {
+          "path": "client/script/convertJavaToTs.cjs",
+          "sha256": "1d8752810a5e19734d6eb5cfe4220f9be0387274dade5e87700b6cf88861a67b"
+        }
+      ]
+    }
+  }
+}

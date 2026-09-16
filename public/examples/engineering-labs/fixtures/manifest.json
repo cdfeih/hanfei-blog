@@ -1,0 +1,68 @@
+{
+  "commit": "67b9805a064b68dffda405e2f1134e57b84859e1",
+  "compiledWith": "TypeScript 5.9.3",
+  "files": [
+    {
+      "fixture": "atom.cjs",
+      "source": "client/src/common/hooks/createAtomFetcher.ts",
+      "sha256": "b7b807c2472f97f7e7da7a0811abb7f251e72a0a642977ed5d97b658b94eeee3",
+      "substitution": null,
+      "fixtureSha256": "0f041da0f1bb65f9cc2845a789cb22339056db52bfa3ee8e9d4966c27e017150"
+    },
+    {
+      "fixture": "socket.cjs",
+      "source": "client/packages/utils/src/websocket/websocket.ts",
+      "sha256": "8fb4c70af35ed8ef78c9b11f21d0f0c87459a4a808c82fa3dacd7a8781fc94de",
+      "substitution": null,
+      "fixtureSha256": "b563286c082d4f58976efd7d352224ff14e8405b583371476c5cd102d50e9c0e"
+    },
+    {
+      "fixture": "observer.cjs",
+      "source": "client/packages/utils/src/observers/obser.ts",
+      "sha256": "23236716749dd83ab3bff0659cb91225b37d94643ddb4d027d44c2395c175f86",
+      "substitution": null,
+      "fixtureSha256": "ed360827014212aea65060c59393dad0022ce1ca61b6845b240357c3e999d44f"
+    },
+    {
+      "fixture": "guard.cjs",
+      "source": "client/src/routes/guard.tsx",
+      "sha256": "89a835d194755750bba7d4617b65a624e2b96d8fc738e176b608780ebcb8a0f8",
+      "substitution": null,
+      "fixtureSha256": "f26805f996d7edb9863d1a9f2d2d7200a374637722eeba54c6367187f11c7615"
+    },
+    {
+      "fixture": "barrel.cjs",
+      "source": "client/plugins/vite-barrel-resolution.ts",
+      "sha256": "555f882437d1c6155e4df82aab402e656f3829131e381bfe584134874794dca9",
+      "substitution": null,
+      "fixtureSha256": "0e27061be2bcac44f9df748057e384b5483e73d7036d0fb0bbe773d11fe12354"
+    },
+    {
+      "fixture": "resolver.cjs",
+      "source": "client/packages/resolverUtils.ts",
+      "sha256": "268854c59f6364702c412b718aef0b8964caf946857f1baee7ee48adf0d0ac2b",
+      "substitution": null,
+      "fixtureSha256": "c1853111609100438aec4af1e0f89710fc4b73da8b4e4140c51dee1f9845b90d"
+    },
+    {
+      "fixture": "store.cjs",
+      "source": "client/src/stores/wsStore.ts",
+      "sha256": "9fa3e5e7341a2d68360290a6a685f275d84df7eafd5613a6848c189602a63f64",
+      "substitution": "import.meta.env.VITE_APP_BASE_URL -> empty string for isolated environment",
+      "fixtureSha256": "c4cbc1dbdf797f5a17a350ed41fed1c0e9f6e4269eeb3fa32d6e34c58df19dbf"
+    },
+    {
+      "fixture": "required.cjs",
+      "source": "client/script/convertJavaToTs.cjs",
+      "sha256": "1d8752810a5e19734d6eb5cfe4220f9be0387274dade5e87700b6cf88861a67b",
+      "substitution": "Extract only requiredAnnotationsRegex, sizeAnnotationRegex and isFieldRequired using the TypeScript AST; do not execute the generator.",
+      "fixtureSha256": "97f38dd53288b862236d9cfa1c92d5e313c590cb93fdb71bfb38853cd2009deb"
+    }
+  ],
+  "java": {
+    "fixture": "java/LogSanitizer.java",
+    "source": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/util/LogSanitizer.java",
+    "sha256": "f50361aacfff641e25ed55f4f6a0628e0f17591cfdc5d7a64256fe9736a3a1fe",
+    "substitution": null
+  }
+}
