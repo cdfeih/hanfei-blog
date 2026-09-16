@@ -24,10 +24,17 @@ function expect(cond, msg) {
   if (!cond) throw new Error(msg ?? '断言失败');
 }
 
-/* 可见的列表项（未 hidden 的文章行 href） */
+/* 视觉可见的列表项：hidden 属性 + 计算样式双重判断（防止 CSS 覆盖 hidden 导致的假阳性） */
 const visibleNotes = (page) =>
   page.$$eval('[data-note]', (els) =>
-    els.filter((e) => !e.hidden).map((e) => e.getAttribute('href'))
+    els
+      .filter(
+        (e) =>
+          !e.hidden &&
+          getComputedStyle(e).display !== 'none' &&
+          e.offsetParent !== null
+      )
+      .map((e) => e.getAttribute('href'))
   );
 
 /* 优先使用系统已安装的 Chrome（channel: 'chrome'），未安装时回退到 Playwright Chromium */
@@ -112,53 +119,64 @@ const pickArticle = async (page) => {
   await ctx.close();
 }
 
-/* ---------- C. 列表筛选（D07：URL 状态） ---------- */
+/* ---------- C. 列表筛选（D07：URL 状态；期望集合按 DOM 动态计算，与内容库解耦） ---------- */
 {
   const ctx = await browser.newContext();
   const page = await ctx.newPage();
 
-  await test('C1 列表初始展示全部 4 篇并显示计数', async () => {
+  const expectedFor = (topic) =>
+    page.$$eval(
+      '[data-note]',
+      (els, t) =>
+        els
+          .filter((e) => t === 'all' || (e.dataset.topics ?? '').split(' ').includes(t))
+          .map((e) => e.getAttribute('href')),
+      topic
+    );
+  const sameSet = (vis, exp) => vis.length === exp.length && exp.every((h) => vis.includes(h));
+
+  await test('C1 列表初始展示全部已发布文章并显示计数', async () => {
     await page.goto(`${BASE}/notes/`);
     const vis = await visibleNotes(page);
-    expect(vis.length === 4, `可见 ${vis.length} 篇`);
+    const all = await page.$$eval('[data-note]', (els) => els.length);
+    expect(all > 0 && vis.length === all, `可见 ${vis.length}/${all} 篇`);
     const note = await page.textContent('[data-count-note]');
-    expect(note.includes('4'), `计数文本：“${note.trim()}”`);
+    expect(note.includes(String(all)), `计数文本：“${note.trim()}”`);
   });
 
-  await test('C2 点击“系统建模”→ 筛出 1 篇且 URL 带 ?topic=modeling', async () => {
+  await test('C2 点击“系统建模”→ 只显示该领域且 URL 带 ?topic=modeling', async () => {
     await page.click('[data-topic="modeling"]');
     await page.waitForTimeout(100);
     const vis = await visibleNotes(page);
-    expect(vis.length === 1, `可见 ${vis.length} 篇`);
-    expect(vis[0].includes('defining-module-boundaries'), `筛选到 ${vis[0]}`);
+    expect(sameSet(vis, await expectedFor('modeling')), `可见 ${vis.length} 篇，与期望集合不符`);
     expect(page.url().includes('topic=modeling'), `URL=${page.url()}`);
     const pressed = await page.getAttribute('[data-topic="modeling"]', 'aria-pressed');
     expect(pressed === 'true', `aria-pressed=${pressed}`);
   });
 
-  await test('C3 点击“复杂前端”→ 1 篇；后退恢复“系统建模”状态', async () => {
+  await test('C3 点击“复杂前端”→ 正确筛选；后退恢复“系统建模”状态', async () => {
     await page.click('[data-topic="frontend"]');
     await page.waitForTimeout(100);
     const vis = await visibleNotes(page);
-    expect(vis.length === 1 && vis[0].includes('frontend-state-ownership'), `可见 ${vis.join(',')}`);
+    expect(sameSet(vis, await expectedFor('frontend')), `可见 ${vis.length} 篇，与期望集合不符`);
     await page.goBack();
     await page.waitForTimeout(200);
     const back = await visibleNotes(page);
-    expect(back.length === 1 && back[0].includes('defining-module-boundaries'), `后退后 ${back.join(',')}`);
+    expect(sameSet(back, await expectedFor('modeling')), `后退后 ${back.length} 篇，与期望集合不符`);
   });
 
   await test('C4 直接访问 ?topic=frontend 可恢复筛选', async () => {
     await page.goto(`${BASE}/notes/?topic=frontend`);
     await page.waitForTimeout(100);
     const vis = await visibleNotes(page);
-    expect(vis.length === 1 && vis[0].includes('frontend-state-ownership'), `可见 ${vis.join(',')}`);
+    expect(sameSet(vis, await expectedFor('frontend')), `可见 ${vis.length} 篇，与期望集合不符`);
   });
 
   await test('C5 无效 topic 参数按“全部”处理', async () => {
     await page.goto(`${BASE}/notes/?topic=bogus`);
     await page.waitForTimeout(100);
     const vis = await visibleNotes(page);
-    expect(vis.length === 4, `可见 ${vis.length} 篇`);
+    expect(sameSet(vis, await expectedFor('all')), `可见 ${vis.length} 篇，与期望集合不符`);
   });
 
   await test('C6 “全部笔记”点击后清除 URL 参数', async () => {
@@ -167,7 +185,7 @@ const pickArticle = async (page) => {
     await page.waitForTimeout(100);
     expect(!page.url().includes('topic='), `URL=${page.url()}`);
     const vis = await visibleNotes(page);
-    expect(vis.length === 4, `可见 ${vis.length} 篇`);
+    expect(sameSet(vis, await expectedFor('all')), `可见 ${vis.length} 篇，与期望集合不符`);
   });
 
   await ctx.close();
@@ -247,7 +265,17 @@ const pickArticle = async (page) => {
     await page.click('[data-back-to-notes]');
     await page.waitForLoadState('load');
     const vis = await visibleNotes(page);
-    expect(vis.length === 1 && vis[0].includes('defining-module-boundaries'), `返回后可见 ${vis.join(',')}`);
+    const expM = await page.$$eval(
+      '[data-note]',
+      (els) =>
+        els
+          .filter((e) => (e.dataset.topics ?? '').split(' ').includes('modeling'))
+          .map((e) => e.getAttribute('href'))
+    );
+    expect(
+      vis.length === expM.length && expM.every((h) => vis.includes(h)),
+      `返回后可见 ${vis.length} 篇，期望 ${expM.length} 篇`
+    );
   });
 
   await ctx.close();
@@ -336,6 +364,32 @@ await test('F1 访问不存在路径返回 404 页面', async () => {
       );
       expect(over <= 2, `${p} 溢出 ${over}px`);
     }
+  });
+
+  await ctx.close();
+}
+
+/* ---------- H. 首页分类筛选（视觉层验证） ---------- */
+{
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+
+  await test('H1 首页点击“复杂前端”：精选卡与列表视觉切换', async () => {
+    await page.goto(`${BASE}/#writing`);
+    await page.click('#writing [data-topic="frontend"]');
+    await page.waitForTimeout(100);
+    const vis = await page.$$eval('#writing [data-note]', (els) =>
+      els
+        .filter((e) => !e.hidden && getComputedStyle(e).display !== 'none')
+        .map((e) => e.getAttribute('href'))
+    );
+    expect(vis.length === 1 && vis[0].includes('atom-request-coalescing'), `可见 ${vis.join(',')}`);
+    const hiddenCount = await page.$$eval('#writing [data-note]', (els) =>
+      els.filter((e) => getComputedStyle(e).display === 'none').length
+    );
+    expect(hiddenCount === 2, `${hiddenCount} 个元素未隐藏`);
+    const note = await page.textContent('#writing [data-count-note]');
+    expect(note.includes('1'), `计数：“${note.trim()}”`);
   });
 
   await ctx.close();
