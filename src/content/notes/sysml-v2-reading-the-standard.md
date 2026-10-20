@@ -3,7 +3,7 @@ title: SysML v2 标准解读（一）：先找到语义，再理解图形与工�
 slug: sysml-v2-reading-the-standard
 description: 从 OMG 正式文档的结构出发，建立 SysML、KerML、模型库和标准 API 的阅读路线，并用一个双泵系统解释语法正确、语义一致与工程正确之间的区别。
 status: published
-publishedAt: 2026-10-1
+publishedAt: 2026-10-01
 topics:
   - modeling
   - architecture

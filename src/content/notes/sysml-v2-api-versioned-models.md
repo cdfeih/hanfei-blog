@@ -3,7 +3,7 @@ title: SysML v2 标准解读（四）：模型 API 为什么必须知道“哪�
 slug: sysml-v2-api-versioned-models
 description: 依据 Systems Modeling API and Services 1.0，讨论稳定身份、版本记录、Commit、Branch 和 Tag，并用缓存串版与分支推进的例子推导可复现读取和适配层设计。
 status: published
-publishedAt: 2026-10-4
+publishedAt: 2026-10-04
 topics:
   - architecture
   - modeling

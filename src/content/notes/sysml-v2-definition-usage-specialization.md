@@ -3,7 +3,7 @@ title: SysML v2 标准解读（二）：Definition、Usage 与特化，不能只
 slug: sysml-v2-definition-usage-specialization
 description: 通过双泵冷却单元，区分类型、上下文角色和实际值，解释 typing、subsetting 与 redefinition 的差异，以及它们对多重性和平台数据模型的影响。
 status: published
-publishedAt: 2026-10-2
+publishedAt: 2026-10-02
 topics:
   - modeling
   - architecture

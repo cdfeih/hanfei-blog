@@ -3,7 +3,7 @@ title: SysML v2 标准解读（三）：写了 satisfy，为什么仍不能说�
 slug: sysml-v2-requirements-verification
 description: 用冷却单元响应时间的例子，区分需求约束、满足断言与验证证据，分析 assume/require 的逻辑陷阱，以及验证结果为何需要四种状态。
 status: published
-publishedAt: 2026-10-3
+publishedAt: 2026-10-03
 topics:
   - modeling
   - architecture
