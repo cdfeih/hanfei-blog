@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import rehypeBaseLinks from './scripts/rehype-base-links.mjs';
 
 /**
  * 域名与子路径通过环境变量配置：
@@ -46,6 +47,7 @@ export default defineConfig({
     }),
   ],
   markdown: {
+    rehypePlugins: [[rehypeBaseLinks, { base }]],
     shikiConfig: {
       themes: {
         light: 'github-light',

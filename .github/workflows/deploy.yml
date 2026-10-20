@@ -61,7 +61,9 @@ jobs:
           echo "使用站点地址：${SITE_URL}，base：${BASE_PATH}"
 
       - name: Type & content check
-        run: pnpm exec astro check
+        run: |
+          pnpm test:content-links
+          pnpm exec astro check
 
       - name: Build (Astro + Pagefind)
         run: |

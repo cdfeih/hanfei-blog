@@ -16,7 +16,7 @@ topics:                    # 领域，必填，至少一个
   - modeling               # modeling 系统建模 / frontend 复杂前端
   - architecture           # architecture 平台架构 / management 工程管理
 kind: architecture         # 可选文章类型：architecture 架构设计 / decision 技术决策 / delivery 团队与交付
-featuredOrder: 1           # 可选，编辑精选顺序（数字越小越靠前）
+featuredOrder: 1           # 历史兼容字段，当前不影响文章排序
 publishedAt: 2026-09-01    # status: published 时必填，YYYY-MM-DD
 updatedAt: 2026-09-10      # 可选，确有内容更新且晚于发布日时填写
 cover:                     # 可选封面
@@ -64,4 +64,5 @@ cover:                     # 可选封面
 - 代码块：` ```ts ` 标注语言即可，页面自动提供复制按钮；代码高亮适配深浅色
 - 表格：宽表格在自身容器内横向滚动，不影响整页布局
 - 图片：提供有意义的 alt；技术图优先 SVG 或清晰截图
-- 首页排序：`featuredOrder` 优先，其余按发布日期倒序
+- 正文站内链接与图片可以写 `/notes/...`、`/examples/...`、`/images/...`；构建时自动补全部署子路径，勿手工写死 `/hanfei-blog`。外链、锚点和相对路径保持原样。
+- 首页与文章列表按 `publishedAt` 倒序，最新发布的文章在最前；同一天发布的文章按 slug 稳定排序。`updatedAt` 和历史 `featuredOrder` 字段不改变顺序。

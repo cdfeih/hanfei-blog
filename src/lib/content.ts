@@ -7,12 +7,9 @@ function todayISO(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-/** 展示排序：编辑精选顺序优先，其余按发布日期倒序。 */
+/** 展示排序：发布日期倒序；同一天发布的文章按 slug 保持稳定顺序。 */
 export function sortForDisplay(notes: Note[]): Note[] {
   return [...notes].sort((a, b) => {
-    const fa = a.data.featuredOrder ?? Infinity;
-    const fb = b.data.featuredOrder ?? Infinity;
-    if (fa !== fb) return fa - fb;
     const da = a.data.publishedAt ?? '';
     const db = b.data.publishedAt ?? '';
     if (da !== db) return db.localeCompare(da);

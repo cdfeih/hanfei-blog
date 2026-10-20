@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "astro dev",
     "check": "astro check",
+    "test:content-links": "node --test scripts/rehype-base-links.test.mjs",
     "build": "astro build",
     "postbuild": "pagefind --site dist",
     "preview": "astro preview",
