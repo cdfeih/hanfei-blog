@@ -1,0 +1,638 @@
+{
+  "branch": "feature/v2.5.0/normal",
+  "commit": "4918e0d27813a06f7496bd387758e7f3d474ed20",
+  "files": [
+    {
+      "path": "client/src/appModeling/components/aiAssistant/aiAssistant.tsx",
+      "sha256": "c05e30d8e865b17b562f8529c2a7e9f4f02622fa13c66b9cc7e4f3cb635feca5",
+      "anchors": [
+        {
+          "line": 34,
+          "symbol": "import { getAssistantSelectedIds } from './context'"
+        },
+        {
+          "line": 63,
+          "symbol": "UNKNOWN: '结果待确认',"
+        },
+        {
+          "line": 129,
+          "symbol": "const unresolved = active.status === 'UNKNOWN'"
+        },
+        {
+          "line": 139,
+          "symbol": "const selectedElementIds = getAssistantSelectedIds(selected)"
+        },
+        {
+          "line": 356,
+          "symbol": "conversation.status === 'UNKNOWN' || event.code === 'OPERATION_UNKNOWN'"
+        },
+        {
+          "line": 357,
+          "symbol": "? 'UNKNOWN'"
+        },
+        {
+          "line": 370,
+          "symbol": "conversation.status === 'UNKNOWN' || conversation.status === 'ERROR'"
+        },
+        {
+          "line": 385,
+          "symbol": ": { ...conversation, status: conversation.status === 'UNKNOWN' ? 'UNKNOWN' : status }"
+        },
+        {
+          "line": 472,
+          "symbol": "status: item.status === 'UNKNOWN' ? 'UNKNOWN' : 'RUNNING',"
+        },
+        {
+          "line": 575,
+          "symbol": "status: conversation.status === 'UNKNOWN' ? 'UNKNOWN' : 'RUNNING',"
+        },
+        {
+          "line": 638,
+          "symbol": "status: conversation.status === 'UNKNOWN' ? 'UNKNOWN' : 'STOPPED',"
+        }
+      ]
+    },
+    {
+      "path": "client/src/appModeling/components/aiAssistant/context.ts",
+      "sha256": "c8296e638e8b473fafaecc8cafee3432d388c93fd7801126f3ab6cb771bc0f1b",
+      "anchors": [
+        {
+          "line": 2,
+          "symbol": "export function getAssistantSelectedIds(elements: { dataId?: string }[]): string[] {"
+        }
+      ]
+    },
+    {
+      "path": "client/src/appModeling/components/aiAssistant/stream.ts",
+      "sha256": "ef46446fe854c29e6778801d4b30c62e98327b77b6767d3a6096b388d8f11c4b",
+      "anchors": [
+        {
+          "line": 4,
+          "symbol": "export async function readAssistantEvents("
+        }
+      ]
+    },
+    {
+      "path": "server/docs/features/mcp-tools-audit-20261016.md",
+      "sha256": "143aa7fcae7f31475b99c14a0d2eee2b3fee8f2481b46c22bfe9ac49a896fb06",
+      "anchors": [
+        {
+          "line": 11,
+          "symbol": "| 单位没有 elementId，无法建立 typing | 标准库采用 URI/qualifiedName 引用，无数据库 ID 是正常设计。新工具 `set_model_attribute_declaration` 复用正式类型/单位下拉保存，支持属性用法及属性定义，SET/UNSET 保留已有值；类型为 FeatureTyping/定义的 Subcla"
+        },
+        {
+          "line": 19,
+          "symbol": "| 自动化配置发现 | 值得覆盖：执行工具已有，缺少发现入口会迫使 AI 猜 ID。新增 `get_model_automation_options` 分页查询当前框架配置，返回唯一可读目标及不能执行的原因；执行时仍做正式权限/锁/配置校验。 |"
+        },
+        {
+          "line": 110,
+          "symbol": "| set_model_attribute_declaration | 属性窗类型 / 单位下拉 | **后续新增**标准库声明独立 SET/UNSET，保留已有值；限定名引用，无需数据库 ID。 |"
+        },
+        {
+          "line": 135,
+          "symbol": "| set_model_expression_visibility | 活动/状态条件显示 | 仅作用于真实支持的关系图元。 |"
+        },
+        {
+          "line": 146,
+          "symbol": "| set_model_expression | OCL / 正式支持的自然语言条件 | **补批处理**；AST、变量绑定和所属目标保持真实。 |"
+        },
+        {
+          "line": 152,
+          "symbol": "| get_model_automation_options | 框架自动化配置选择 | **后续新增**分页发现真实配置、唯一可读目标及不支持原因；不授予写权限。 |"
+        }
+      ]
+    },
+    {
+      "path": "server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/ai/AiAssistantRuntimeStore.java",
+      "sha256": "f1aa07e9826cb38ba74f79da3af0567cf985a7861e95cc619ffd9f24906ae86f",
+      "anchors": [
+        {
+          "line": 12,
+          "symbol": "boolean compareAndSet(Long userId, String namespace, String key, String json, long expectedVersion);"
+        },
+        {
+          "line": 15,
+          "symbol": "boolean saveConversation(Long userId, ConversationUpdate update);"
+        }
+      ]
+    },
+    {
+      "path": "server/mbse-platform-mcp/src/main/java/com/shareetech/mbse/platform/mcp/AiAssistantToolBridge.java",
+      "sha256": "2de7109936a17828e8e7f8a556e960180f94033a0920ac0eca7072446dc2f539",
+      "anchors": [
+        {
+          "line": 71,
+          "symbol": "rejectNestedIdentity(arguments, true);"
+        },
+        {
+          "line": 105,
+          "symbol": "public McpSchema.CallToolResult execute(String name, String credentialId, boolean readOnly, Map<String, Object> arguments) {"
+        },
+        {
+          "line": 233,
+          "symbol": "return executor.execute(tool, McpTransportContext.create(Map.of(McpContext.CREDENTIAL_ATTRIBUTE, credentialId)),"
+        },
+        {
+          "line": 237,
+          "symbol": "private void rejectNestedIdentity(Object value, boolean top) {"
+        },
+        {
+          "line": 245,
+          "symbol": "rejectNestedIdentity(child, false);"
+        },
+        {
+          "line": 249,
+          "symbol": "list.forEach(child -> rejectNestedIdentity(child, false));"
+        }
+      ]
+    },
+    {
+      "path": "server/mbse-platform-mcp/src/main/java/com/shareetech/mbse/platform/mcp/assistant/AgentScopeRuntime.java",
+      "sha256": "750f25ab3a044548f5967c2abfd67be78e88cb1b9a139923457f93d76fe7c734",
+      "anchors": [
+        {
+          "line": 167,
+          "symbol": "invocation.check().run();"
+        },
+        {
+          "line": 181,
+          "symbol": "invocation.check().run();"
+        },
+        {
+          "line": 188,
+          "symbol": "invocation.check().run();"
+        },
+        {
+          "line": 226,
+          "symbol": "3. 已执行操作按交付物合并记录；保留未解决操作的operationId/requestId和状态，SUCCEEDED/部分成功/UNKNOWN/失败必须区分；不得重做已提交或未知操作。"
+        },
+        {
+          "line": 238,
+          "symbol": "void execute(Msg input) {"
+        }
+      ]
+    },
+    {
+      "path": "server/mbse-platform-mcp/src/main/java/com/shareetech/mbse/platform/mcp/assistant/AiAssistantContext.java",
+      "sha256": "767c58fc966349b7539072ff9de64f52647644474b6d647fb9fe418e88621b15",
+      "anchors": [
+        {
+          "line": 50,
+          "symbol": "int cutoff = cutoff(conversation);"
+        },
+        {
+          "line": 141,
+          "symbol": "private int cutoff(List<Msg> messages) {"
+        }
+      ]
+    },
+    {
+      "path": "server/mbse-platform-mcp/src/main/java/com/shareetech/mbse/platform/mcp/assistant/AiAssistantDelegation.java",
+      "sha256": "d5617cf3c3d5216c7c0416a6e413341b3e74821c09149f2a04cab2c456d68789",
+      "anchors": [
+        {
+          "line": 123,
+          "symbol": "check.run();"
+        },
+        {
+          "line": 228,
+          "symbol": "check.run();"
+        },
+        {
+          "line": 236,
+          "symbol": "check.run();"
+        }
+      ]
+    },
+    {
+      "path": "server/mbse-platform-mcp/src/main/java/com/shareetech/mbse/platform/mcp/assistant/AiAssistantProgress.java",
+      "sha256": "e56a9acd9856e1e758d9e2e24e1f12c4077b72e64d1cbeb57b3692d65f069f38",
+      "anchors": [
+        {
+          "line": 45,
+          "symbol": "var decision = observe(input.messages());"
+        },
+        {
+          "line": 61,
+          "symbol": "Decision observe(List<Msg> messages) {"
+        }
+      ]
+    },
+    {
+      "path": "server/mbse-platform-mcp/src/main/java/com/shareetech/mbse/platform/mcp/assistant/AiAssistantService.java",
+      "sha256": "9a7e2d4c0a2b200b9c4e466805f9bb906426dfbddfc615bd4656e0cbf55b0259",
+      "anchors": [
+        {
+          "line": 212,
+          "symbol": "public SseEmitter chat(Long userId, AiAssistantRequests.Chat request) {"
+        },
+        {
+          "line": 244,
+          "symbol": "runtimeStores.getObject().saveConversation(userId, new AiAssistantRuntimeStore.ConversationUpdate("
+        },
+        {
+          "line": 255,
+          "symbol": "restoreRuntime(session, connection, existing.orElse(null));"
+        },
+        {
+          "line": 353,
+          "symbol": "toolResult(session, pending.run, pending.call, arguments);"
+        },
+        {
+          "line": 453,
+          "symbol": "if (!session.running.compareAndSet(false, true)) {"
+        },
+        {
+          "line": 479,
+          "symbol": "persistRuntime(session, run);"
+        },
+        {
+          "line": 493,
+          "symbol": "emitter.onError(ignored -> disconnected.run());"
+        },
+        {
+          "line": 498,
+          "symbol": "persistRuntime(session, run);"
+        },
+        {
+          "line": 501,
+          "symbol": "disconnected.run();"
+        },
+        {
+          "line": 506,
+          "symbol": "workers.execute(() -> {"
+        },
+        {
+          "line": 511,
+          "symbol": "task.run();"
+        },
+        {
+          "line": 520,
+          "symbol": "String code = unknown ? \"OPERATION_UNKNOWN\" : ex instanceof AccessDeniedException ? \"PERMISSION_DENIED\""
+        },
+        {
+          "line": 598,
+          "symbol": "// 写入提交与真实回执之间的临时登记不代表 UNKNOWN；其他代理只能在回执处理后检查。"
+        },
+        {
+          "line": 605,
+          "symbol": "childCheck.run();"
+        },
+        {
+          "line": 614,
+          "symbol": "if (!processCalls(session, run)) {"
+        },
+        {
+          "line": 615,
+          "symbol": "persistRuntime(session, run);"
+        },
+        {
+          "line": 638,
+          "symbol": "runtime.execute(run.input);"
+        },
+        {
+          "line": 644,
+          "symbol": "persistRuntime(session, run);"
+        },
+        {
+          "line": 654,
+          "symbol": "var result = bridge().execute(\"get_modeling_context\", session.credentialId, true, Map.of(\"workspace\", session.workspace));"
+        },
+        {
+          "line": 674,
+          "symbol": "private boolean processCalls(Session session, Run run) {"
+        },
+        {
+          "line": 721,
+          "symbol": "toolResult(session, run, call, arguments);"
+        },
+        {
+          "line": 728,
+          "symbol": "private void toolResult(Session session, Run run, AssistantMessage.ToolCall call, Map<String, Object> arguments) {"
+        },
+        {
+          "line": 735,
+          "symbol": "persistRuntime(session, run);"
+        },
+        {
+          "line": 739,
+          "symbol": "result = bridge().execute(call.name(), session.credentialId, run.readOnly, arguments);"
+        },
+        {
+          "line": 753,
+          "symbol": "if (writing && Set.of(\"SUCCEEDED\", \"APPLIED_WITH_WARNINGS\", \"UNKNOWN\").contains(operationStatus)) {"
+        },
+        {
+          "line": 771,
+          "symbol": "persistRuntime(session, run);"
+        },
+        {
+          "line": 780,
+          "symbol": "+ \"标准库类型和单位用query_reference_candidates的STANDARD_TYPE/UNIT查qualifiedName，再用set_model_attribute_declaration设置声明，保留已有值。\""
+        },
+        {
+          "line": 782,
+          "symbol": "+ \"自动化先get_model_automation_options查真实配置及目标。表达式保存失败按真实诊断处理，不能无证据归因为Boolean不支持，也不能把公式写入名称冒充正式AST。\""
+        },
+        {
+          "line": 788,
+          "symbol": "+ \"UNKNOWN状态禁止重新写入，告知用户核对。删除包/视图由服务器向用户确认，不能声称已确认。\""
+        },
+        {
+          "line": 885,
+          "symbol": "snapshot = new AiAssistantHistoryStore.Conversation(snapshot.id(), snapshot.title(), \"UNKNOWN\", snapshot.messages(),"
+        },
+        {
+          "line": 888,
+          "symbol": "persistRuntime(session, run, snapshot);"
+        },
+        {
+          "line": 919,
+          "symbol": "private void persistRuntime(Session session, Run run) {"
+        },
+        {
+          "line": 920,
+          "symbol": "persistRuntime(session, run, null);"
+        },
+        {
+          "line": 923,
+          "symbol": "private void persistRuntime(Session session, Run run, AiAssistantHistoryStore.Conversation snapshot) {"
+        },
+        {
+          "line": 957,
+          "symbol": "? store.compareAndSet(session.userId, runtimeScope(session.workspace), session.id, stringify(state), session.snapshotVersion)"
+        },
+        {
+          "line": 958,
+          "symbol": ": store.saveConversation(session.userId, new AiAssistantRuntimeStore.ConversationUpdate(runtimeScope(session.workspace), session.id,"
+        },
+        {
+          "line": 979,
+          "symbol": "restoreRuntime(session, connection, archive);"
+        },
+        {
+          "line": 984,
+          "symbol": "private void restoreRuntime(Session session, ModelConnection connection, AiAssistantHistoryStore.Conversation archive) {"
+        },
+        {
+          "line": 1082,
+          "symbol": "restoreRuntime(session, connection, archive);"
+        }
+      ]
+    },
+    {
+      "path": "server/mbse-platform-mcp/src/main/java/com/shareetech/mbse/platform/mcp/McpAuthenticationFilter.java",
+      "sha256": "11fb0a0cea8ee0d583ffc15619861bf87aea8a4fa984677e66b1f8eeba1a7369",
+      "anchors": []
+    },
+    {
+      "path": "server/mbse-platform-mcp/src/main/java/com/shareetech/mbse/platform/mcp/McpConfiguration.java",
+      "sha256": "c02b4c95087d9908cbd05ca1b37b0ea7bb6e244620891147c3bba4c421d8d453",
+      "anchors": [
+        {
+          "line": 82,
+          "symbol": "return new SyncToolSpecification(schema, (context, request) -> executor.execute(tool, context, request));"
+        }
+      ]
+    },
+    {
+      "path": "server/mbse-platform-mcp/src/main/java/com/shareetech/mbse/platform/mcp/McpContext.java",
+      "sha256": "427a3a5f7e00fda5d50823cce84a5bcaf14981558785c6827cf6df0d3b9f7dc0",
+      "anchors": []
+    },
+    {
+      "path": "server/mbse-platform-mcp/src/main/java/com/shareetech/mbse/platform/mcp/McpToolExecutor.java",
+      "sha256": "cecf7b4d2adb8b2e5cc181b6047d6adf9c8df79bf41c538b2dc18028e46af42a",
+      "anchors": [
+        {
+          "line": 64,
+          "symbol": "public <T> McpSchema.CallToolResult execute(McpTool<T> tool, McpTransportContext transport,"
+        },
+        {
+          "line": 88,
+          "symbol": "Object result = tool.execute(input);"
+        },
+        {
+          "line": 89,
+          "symbol": "boolean toolError = result instanceof McpOperationReceipt receipt && receipt.toolError();"
+        },
+        {
+          "line": 91,
+          "symbol": "code = \"OPERATION_FAILED_OR_UNKNOWN\";"
+        },
+        {
+          "line": 96,
+          "symbol": "String compact = objectMapper.writeValueAsString(receipt.compactReceipt());"
+        },
+        {
+          "line": 142,
+          "symbol": "T input = inputMapper.readerFor(tool.inputType()).with(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)"
+        }
+      ]
+    },
+    {
+      "path": "server/mbse-platform-mcp/src/main/java/com/shareetech/mbse/platform/mcp/McpToolSchemas.java",
+      "sha256": "1f21f5ff971008dc62f48fe84ba94187a4fe5678a7eb3ac333568311f167376e",
+      "anchors": []
+    },
+    {
+      "path": "server/mbse-platform-project/mbse-platform-project-service/src/main/java/com/shareetech/mbse/platform/project/mcp/modeling/ModelingPostCommitResult.java",
+      "sha256": "32f036e931a8e434e1efcc3d5097b651aeefda81ee23984ab534d32342e94c13",
+      "anchors": []
+    },
+    {
+      "path": "server/mbse-platform-project/mbse-platform-project-service/src/main/java/com/shareetech/mbse/platform/project/mcp/modeling/ModelingResult.java",
+      "sha256": "b5fe63f72afd29b5ad6b0caaa7da3ad7f257ec4018334796cd259b1e780f2511",
+      "anchors": [
+        {
+          "line": 12,
+          "symbol": "public boolean toolError() {"
+        },
+        {
+          "line": 13,
+          "symbol": "return \"FAILED_NO_COMMIT\".equals(status) || \"UNKNOWN\".equals(status)"
+        },
+        {
+          "line": 14,
+          "symbol": "|| \"PARTIAL\".equals(semanticStatus) || \"PARTIAL_OR_UNKNOWN\".equals(semanticStatus);"
+        },
+        {
+          "line": 18,
+          "symbol": "public Object compactReceipt() {"
+        }
+      ]
+    },
+    {
+      "path": "server/mbse-platform-project/mbse-platform-project-service/src/main/java/com/shareetech/mbse/platform/project/mcp/modeling/ModelingToolSupport.java",
+      "sha256": "9a037f2054984f7bc5952e0f3248086a5935975c8034e97289218dded149c653",
+      "anchors": [
+        {
+          "line": 97,
+          "symbol": "public Object execute(T input) {"
+        },
+        {
+          "line": 99,
+          "symbol": "return access.inVersion(input.workspace(), () -> ModelingWriteGate.exclusive(() -> action.apply(input)));"
+        },
+        {
+          "line": 133,
+          "symbol": "return ModelingWriteGate.exclusive(() -> snapshots.issue(identity(), workspace, ids, references));"
+        },
+        {
+          "line": 138,
+          "symbol": "return ModelingWriteGate.exclusive(() -> snapshots.issueCreate(identity(), workspace, ownerId, creationRefs));"
+        },
+        {
+          "line": 143,
+          "symbol": "return ModelingWriteGate.exclusive(() -> snapshots.issueDelete(identity(), workspace, rootId));"
+        },
+        {
+          "line": 224,
+          "symbol": "String digest = snapshots.digest(request);"
+        },
+        {
+          "line": 250,
+          "symbol": "var ticket = tool.verifyReadToken(caller, input);"
+        },
+        {
+          "line": 259,
+          "symbol": "prepared.add(preparedKey(tool.digest(input), input.readToken()));"
+        },
+        {
+          "line": 274,
+          "symbol": "var result = (ModelingResult) tools.get(index).execute(inputs.get(index));"
+        },
+        {
+          "line": 277,
+          "symbol": "// 未提交不能冒充已应用；UNKNOWN 也不能被批次包装掩盖。"
+        },
+        {
+          "line": 283,
+          "symbol": "semanticState = \"PARTIAL_OR_UNKNOWN\";"
+        },
+        {
+          "line": 285,
+          "symbol": "state = \"UNKNOWN\";"
+        },
+        {
+          "line": 286,
+          "symbol": "semanticState = \"PARTIAL_OR_UNKNOWN\";"
+        },
+        {
+          "line": 292,
+          "symbol": "state = \"UNKNOWN\";"
+        },
+        {
+          "line": 293,
+          "symbol": "semanticState = \"PARTIAL_OR_UNKNOWN\";"
+        },
+        {
+          "line": 298,
+          "symbol": "\"instructions\", \"批次提交结果尚未证明；查询各子操作与实际模型，UNKNOWN 禁止自动重做\"));"
+        },
+        {
+          "line": 320,
+          "symbol": "return new ModelingResult(batch.getOperationId(), request.requestId(), \"UNKNOWN\", \"UNKNOWN\", \"UNKNOWN\", false,"
+        },
+        {
+          "line": 329,
+          "symbol": "return snapshots.digest(List.of(digest, token == null ? \"\" : token));"
+        },
+        {
+          "line": 357,
+          "symbol": "? \"UNKNOWN\" : operation.getStatus();"
+        },
+        {
+          "line": 358,
+          "symbol": "return new ModelingResult(operation.getOperationId(), operation.getRequestId(), state, \"UNKNOWN\", \"UNKNOWN\", false,"
+        },
+        {
+          "line": 440,
+          "symbol": "public ModelingSnapshots.Ticket verifyReadToken(McpIdentity caller, T input) {"
+        },
+        {
+          "line": 480,
+          "symbol": "public String digest(T input) {"
+        },
+        {
+          "line": 483,
+          "symbol": "return snapshots.digest(Map.of(\"tool\", name, \"input\", node));"
+        },
+        {
+          "line": 498,
+          "symbol": "public Object execute(T input) {"
+        },
+        {
+          "line": 501,
+          "symbol": "return access.inVersion(input.workspace(), () -> ModelingWriteGate.exclusive(() -> run(caller, input)));"
+        },
+        {
+          "line": 504,
+          "symbol": "private Object run(McpIdentity caller, T input) {"
+        },
+        {
+          "line": 505,
+          "symbol": "String digest = digest(input);"
+        },
+        {
+          "line": 519,
+          "symbol": "verifyReadToken(caller, input);"
+        },
+        {
+          "line": 541,
+          "symbol": "try (ModelingWriteGate.Permit scope = ModelingWriteGate.openPermit(input.workspace())) {"
+        },
+        {
+          "line": 547,
+          "symbol": "result = transactions.execute(tx -> {"
+        },
+        {
+          "line": 574,
+          "symbol": "\"instructions\", \"先查询原 operationId 或 requestId 并读取实际模型；UNKNOWN 禁止自动重做\"));"
+        },
+        {
+          "line": 602,
+          "symbol": "state = \"UNKNOWN\";"
+        },
+        {
+          "line": 627,
+          "symbol": ": \"FAILED_NO_COMMIT\".equals(state) ? \"NOT_APPLIED\" : \"UNKNOWN\","
+        },
+        {
+          "line": 628,
+          "symbol": "\"SUCCEEDED\".equals(state) ? \"REFRESH_REQUIRED\" : \"UNKNOWN\", undoable, warnings, result);"
+        },
+        {
+          "line": 634,
+          "symbol": "return new ModelingResult(operation.getOperationId(), input.requestId(), \"UNKNOWN\", \"UNKNOWN\", \"UNKNOWN\", false,"
+        }
+      ]
+    },
+    {
+      "path": "server/mbse-platform-project/mbse-platform-project-service/src/main/java/com/shareetech/mbse/platform/project/mcp/modeling/ModelingWriteGate.java",
+      "sha256": "47da09f259add036a561e7114693fbef51165d480efd42df3359703a86d3f326",
+      "anchors": [
+        {
+          "line": 64,
+          "symbol": "public static <T> T exclusive(Supplier<T> work) {"
+        },
+        {
+          "line": 98,
+          "symbol": "VALIDATOR.run();"
+        },
+        {
+          "line": 106,
+          "symbol": "work.run();"
+        },
+        {
+          "line": 112,
+          "symbol": "public static Permit openPermit(VersionDTO workspace) {"
+        },
+        {
+          "line": 155,
+          "symbol": "VALIDATOR.run();"
+        }
+      ]
+    }
+  ]
+}

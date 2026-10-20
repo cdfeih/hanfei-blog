@@ -1,0 +1,27 @@
+{
+  "branch": "feature/v2.5.0/normal",
+  "commit": "4918e0d27813a06f7496bd387758e7f3d474ed20",
+  "capturedAt": "2026-10-20",
+  "files": [
+    {
+      "local": "stream.ts",
+      "source": "client/src/appModeling/components/aiAssistant/stream.ts",
+      "sha256": "ef46446fe854c29e6778801d4b30c62e98327b77b6767d3a6096b388d8f11c4b"
+    },
+    {
+      "local": "context.ts",
+      "source": "client/src/appModeling/components/aiAssistant/context.ts",
+      "sha256": "c8296e638e8b473fafaecc8cafee3432d388c93fd7801126f3ab6cb771bc0f1b"
+    },
+    {
+      "local": "McpOperationReceipt.java",
+      "source": "server/mbse-platform-mcp/src/main/java/com/shareetech/mbse/platform/mcp/McpOperationReceipt.java",
+      "sha256": "a4251d697acc9dba1ae4b76f9f57ecf70d295f7a9a1d6b09547efac43b51e237"
+    },
+    {
+      "local": "ModelingResult.java",
+      "source": "server/mbse-platform-project/mbse-platform-project-service/src/main/java/com/shareetech/mbse/platform/project/mcp/modeling/ModelingResult.java",
+      "sha256": "b5fe63f72afd29b5ad6b0caaa7da3ad7f257ec4018334796cd259b1e780f2511"
+    }
+  ]
+}

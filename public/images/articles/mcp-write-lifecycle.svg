@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="630" viewBox="0 0 960 630" role="img" aria-labelledby="title desc">
+  <title id="title">建模命令的提交和验证边界</title>
+  <desc id="desc">幂等与前置条件检查、登记操作、事务提交、派生工作完成、提交后验证、保存回执。提交后的异常不能被解释为没有修改数据。</desc>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="#3152a3"/></marker></defs>
+  <rect width="960" height="630" rx="18" fill="#f5f7fb"/>
+  <g font-family="'Microsoft YaHei',sans-serif">
+    <text x="480" y="45" text-anchor="middle" font-size="24" font-weight="700" fill="#152643">方法返回、物理提交、结果验证是不同边界</text>
+    <g fill="#fff" stroke="#c2cee3" stroke-width="2">
+      <rect x="60" y="80" width="460" height="58" rx="8"/>
+      <rect x="60" y="168" width="460" height="58" rx="8"/>
+      <rect x="60" y="256" width="460" height="58" rx="8"/>
+      <rect x="60" y="374" width="460" height="58" rx="8"/>
+      <rect x="60" y="462" width="460" height="58" rx="8"/>
+      <rect x="60" y="550" width="460" height="58" rx="8" fill="#e9efff" stroke="#3152a3"/>
+    </g>
+    <g fill="#152643" font-size="20" text-anchor="middle">
+      <text x="290" y="116">幂等检查、权限与前置条件</text>
+      <text x="290" y="204">登记操作，进入 RUNNING</text>
+      <text x="290" y="292">事务内执行正式建模动作</text>
+      <text x="290" y="410">等待关联派生工作结束</text>
+      <text x="290" y="498">按需进行提交后回读验证</text>
+      <text x="290" y="586">保存回执与恢复入口</text>
+    </g>
+    <g fill="#526581" font-size="18">
+      <text x="570" y="114">相同请求返回原记录</text>
+      <text x="570" y="202">requestId → operationId</text>
+      <text x="570" y="288">完成回调记录提交事实</text>
+      <text x="570" y="405">事件可能跨线程执行</text>
+      <text x="570" y="486">校验表达式或呈现结果</text>
+      <text x="570" y="512">失败不等于已提交数据回滚</text>
+      <text x="570" y="582">未知结果先核对，禁止自动重做</text>
+    </g>
+    <path d="M40 344H920" stroke="#3152a3" stroke-width="2" stroke-dasharray="7 6"/>
+    <rect x="615" y="327" width="240" height="32" fill="#f5f7fb"/>
+    <text x="735" y="350" text-anchor="middle" fill="#244cc8" font-size="18" font-weight="700">物理事务完成边界</text>
+  </g>
+  <g fill="none" stroke="#3152a3" stroke-width="2.5" marker-end="url(#arrow)">
+    <path d="M290 138V160"/><path d="M290 226V248"/><path d="M290 314V366"/>
+    <path d="M290 432V454"/><path d="M290 520V542"/>
+  </g>
+</svg>
