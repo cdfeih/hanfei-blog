@@ -113,7 +113,7 @@ P：再次读取，记录是否发生接口调用及返回标签
 
 ## 源码定位与验证范围
 
-源码基线为 `67b9805a064b`，主要入口：
+主要入口：
 
 - `server/mbse-platform-web/pom.xml`：最终服务组装。
 - `core/dubbo/DubboConfig.java`：这里及下文的 core 指核心模块 Java 包。

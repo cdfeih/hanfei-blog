@@ -115,7 +115,7 @@ public void deleteAll(Collection<?> collection) throws CacheWriterException {
 
 ## 源码定位与验证范围
 
-基线 `67b9805a064b`，核心文件位于 `server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/`：
+核心文件位于 `server/mbse-platform-core/src/main/java/com/shareetech/mbse/platform/core/`：
 
 - `ignite/IgniteCacheManager.java`：缓存配置、分支装载与清理。
 - `ignite/sync/JdbcEntityStore.java`：项目实际 Store 覆写。

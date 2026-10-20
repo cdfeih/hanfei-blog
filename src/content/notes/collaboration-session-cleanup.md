@@ -114,4 +114,4 @@ sessions/check-then-remove: newly-added-session-lost=true
 4. 在广播处注入异常，检查上下文与本地资源是否仍被释放。
 5. 分组删除后立即同 key 重建，检查旧清理动作是否影响新分组。
 
-源码基线为 `67b9805a064b`，入口是项目 service 的 `project/websocket/CollaborativeSessionManager.java`。[独立实验](../../examples/engineering-labs/README.md) 已运行；完整 Java 多线程、WebSocket 和仿真资源集成测试未执行。
+入口是项目 service 的 `project/websocket/CollaborativeSessionManager.java`。[独立实验](../../examples/engineering-labs/README.md) 已运行；完整 Java 多线程、WebSocket 和仿真资源集成测试未执行。

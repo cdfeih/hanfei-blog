@@ -126,6 +126,6 @@ AND 任务终态保存成功
 
 应至少覆盖最后一页、空数据、上传中断、上传永不结束、线程池拒绝和进程重启。对每种情况检查：持久化状态、文件是否可读、错误阶段是否明确、流和线程是否退出、再次执行是否重复副作用。
 
-源码基线 `67b9805a064b`，系统 service 中 `asyncexcel/importer/` 与 `exporter/` 是入口，重点是 `AsyncPageReadListener`、`AsyncExcelImporter`、`AsyncExcelExporter` 和 `AsyncExportTaskSupport`。
+系统 service 中 `asyncexcel/importer/` 与 `exporter/` 是入口，重点是 `AsyncPageReadListener`、`AsyncExcelImporter`、`AsyncExcelExporter` 和 `AsyncExportTaskSupport`。
 
 [实验包](../../examples/engineering-labs/README.md) 已验证分页模型；数据库分页、EasyExcel 文件产出、管道上传故障和任务恢复尚未做集成验证。

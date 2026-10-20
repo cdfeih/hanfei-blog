@@ -202,6 +202,6 @@ remote：本次目标版源值
 
 ## 实现依据
 
-本文依据 `feature/v2.5.0/normal` 的固定提交 `4918e0d278`，讨论团队实现及我的架构分析。主要入口为 `FrameworkUpgradeServiceImpl#doExecuteFrameworkUpgrade`、`FrameworkFeatureConfigServiceImpl#rebuildByMapping`、`ImportServiceImpl#syncFrameworkImports`。
+本文讨论团队实现及我的架构分析。主要入口为 `FrameworkUpgradeServiceImpl#doExecuteFrameworkUpgrade`、`FrameworkFeatureConfigServiceImpl#rebuildByMapping`、`ImportServiceImpl#syncFrameworkImports`。
 
 关于版本身份与缓存边界，可继续阅读[版本感知缓存键的设计](/notes/version-aware-cache-keys/)。

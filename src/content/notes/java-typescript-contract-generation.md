@@ -137,6 +137,6 @@ Java 源码中的泛型、继承、导入别名解析、嵌套类型、注解参
 
 我会保留一组小而有区分力的 Java 输入：可空 Size、NotNull、Long 大值、嵌套泛型、继承字段和局部更新对象。逐项断言生成类型、运行时 schema 和真实 JSON 样本的关系，并给整个生成流程设置超时。
 
-源码基线 `67b9805a064b`，入口 `client/script/convertJavaToTs.cjs`。[实验包](../../examples/engineering-labs/README.md) 包含原函数抽取结果、来源指纹、VM 超时检查与大整数解析示例。
+入口 `client/script/convertJavaToTs.cjs`。[实验包](../../examples/engineering-labs/README.md) 包含原函数抽取结果、来源指纹、VM 超时检查与大整数解析示例。
 
 本轮没有执行会清理目录的完整生成任务，没有修改生成器，也没有验证所有后端端点。已经确认的事实是：当前必填函数在指定边界输入下不能结束；其余契约风险需要相应的端到端证据。

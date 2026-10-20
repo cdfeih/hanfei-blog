@@ -125,4 +125,4 @@ type RdfValue =
 
 这些是建议验收数据，不是已经全部运行的测试清单。
 
-基线为 `67b9805a064b`，源码位于 adapter service 的 `adapter/oslc/parser/OslcRdfModelReader.java` 与 `OslcResourceParser.java`。本文完成源码追踪和图模型推演，未启动外部 OSLC 服务或执行 Jena 集成测试。
+源码位于 adapter service 的 `adapter/oslc/parser/OslcRdfModelReader.java` 与 `OslcResourceParser.java`。本文完成源码追踪和图模型推演，未启动外部 OSLC 服务或执行 Jena 集成测试。

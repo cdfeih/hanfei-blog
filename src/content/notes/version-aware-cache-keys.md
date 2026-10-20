@@ -358,7 +358,7 @@ generation: old-reader=OLD; next-reader=NEW
 
 ## 源码与实验范围
 
-基于 SE-MBSE 提交 `67b9805a06` 核对。以下路径相对于相应模块的 Java 源码包：
+以下路径相对于相应模块的 Java 源码包：
 
 - project：`metamodel/cache/manager/AbstractVersionedCacheManager.java`、`ElementCacheManager.java`、`ProjectCachePreloader.java`。
 - project：`config/MetaVersionMapper.java`、`utils/IgniteVersionTemplate.java`、`management/service/impl/VersionControlServiceImpl.java`。

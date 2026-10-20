@@ -123,7 +123,7 @@ payloadUtf16Length / payloadFingerprint
 
 ## 复现与验证范围
 
-源码为核心模块 `util/LogSanitizer.java`，基线 `67b9805a064b`。实验保留源文件，附文件指纹与 `LogSanitizerLab.java`。
+源码为核心模块 `util/LogSanitizer.java`，实验保留源文件，附文件指纹与 `LogSanitizerLab.java`。
 
 [下载与运行说明](../../examples/engineering-labs/README.md) 中给出编译命令。本轮在 JDK 21.0.7 上通过 10 项断言，覆盖正常与非法 URL、掩码、短指纹、两种长度、CR/LF/TAB 和 Unicode 分隔符。
 

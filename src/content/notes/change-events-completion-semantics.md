@@ -121,6 +121,6 @@ CompletionStage<List<ListenerResult>> publishAndAwait(Event event);
 
 ## 验证与源码
 
-基线 `67b9805a064b`，核心模块 `ignite/event/` 下的发布器、事件、变更条目和方法监听器，以及 `IgniteTransactionTemplate`、事务切面、线程池配置共同构成证据。
+核心模块 `ignite/event/` 下的发布器、事件、变更条目和方法监听器，以及 `IgniteTransactionTemplate`、事务切面、线程池配置共同构成证据。
 
 [实验说明与运行方法](../../examples/engineering-labs/README.md) 包含嵌套任务模型。本文没有执行生产事件处理器、修复事件总线或验证故障恢复。关键结论是：**分发完成、处理完成、处理成功和可恢复交付，需要分别定义。**

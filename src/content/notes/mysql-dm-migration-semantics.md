@@ -204,6 +204,6 @@ INSERT INTO "SEED" ("ID", "NAME") VALUES (102, 'B');
 
 ## 实现依据
 
-本文依据 `feature/v2.5.0/normal` 固定提交 `4918e0d278` 中的 `scripts/database/convert-mysql-migrations-to-dm.py`、`mysql_migration_model.py` 及对应测试。提到的参数和支持范围均属于这个实现快照。
+本文依据`scripts/database/convert-mysql-migrations-to-dm.py`、`mysql_migration_model.py` 及对应测试。提到的参数和支持范围均属于这个实现快照。
 
 数据库写入完成还有缓存与持久化层面的边界，可继续阅读[Ignite write-behind 的边界](/notes/ignite-write-behind-boundaries/)。
