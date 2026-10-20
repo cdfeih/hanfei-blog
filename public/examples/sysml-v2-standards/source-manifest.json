@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-10-20",
+  "sources": [
+    {
+      "name": "SysML.pdf",
+      "url": "https://www.omg.org/spec/SysML/2.0/Language/PDF",
+      "document": "formal/2026-03-02",
+      "sha256": "46e6c0476a6f1f34f367d57e039d56659bff75e41d2e4b3d37ca4cadea84a83a"
+    },
+    {
+      "name": "KerML.pdf",
+      "url": "https://www.omg.org/spec/KerML/1.0/PDF",
+      "document": "formal/2026-03-01",
+      "sha256": "3bcc96f989bfa9d05cd28e026df3351b795fe8d494187b87bff3db7d96373697"
+    },
+    {
+      "name": "API.pdf",
+      "url": "https://www.omg.org/spec/SystemsModelingAPI/1.0/PDF",
+      "document": "formal/2026-03-04",
+      "sha256": "1a93ffb9214573ec38b00b89f7ce4c7b7ff6559ccbff534a6a97e08e1f145e0a"
+    },
+    {
+      "name": "OpenAPI.json",
+      "url": "https://www.omg.org/spec/SystemsModelingAPI/20250201/OpenAPI.json",
+      "document": "ptc/25-02-30",
+      "sha256": "17e7e8586df6c51ada09d802f48bec6dd68d141454fae05d3f45e9b9879e01ab"
+    },
+    {
+      "name": "Quantities-and-Units-Domain-Library.kpar",
+      "url": "https://www.omg.org/spec/SysML/20250201/Quantities-and-Units-Domain-Library.kpar",
+      "document": "ptc/25-04-29",
+      "sha256": "81a6e7264a9f287e482ec5b35f8ef98725b81f393e0b2e82dae3599511c0adc7"
+    }
+  ],
+  "notes": "官方原文件仅用于本地核对，不随博客重新发布。"
+}
