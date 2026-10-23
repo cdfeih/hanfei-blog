@@ -75,8 +75,3 @@ design-reference/       # 已确认的原型（仅作视觉对照，不参与构
 - 线上地址：<https://cdfeih.github.io/hanfei-blog/>
 - 部署方式：推送 main 分支自动构建并发布到 GitHub Pages（PR 仅校验不部署）
 - Pages 配置：Settings → Pages → Source 选 "GitHub Actions"（已配置）
-
-## 尚未完成（待用户提供资料）
-
-- 真实联系方式（email / GitHub 主页，配置在 `src/config/site.ts`，留空则页面隐藏入口）
-- 正式文章（当前站点展示的是测试内容，不得视为韩飞已发表成果）
