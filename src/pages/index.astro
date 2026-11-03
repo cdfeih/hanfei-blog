@@ -1,6 +1,7 @@
 ---
 import { getPublicNotes } from '../lib/content';
 import { withBase } from '../lib/urls';
+import { SITE } from '../config/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TopicFilter from '../components/TopicFilter.astro';
 import ArticleCard from '../components/ArticleCard.astro';
@@ -111,6 +112,18 @@ const projectRelated = notes
         这个网站用于整理项目中的技术思考：如何理解问题、比较方案、划分系统职责，以及让设计在团队协作中落地。
       </p>
       <p class="signature">飞的工程笔记 <span>／ 从具体问题出发</span></p>
+      <address class="about-links" aria-label="联系方式">
+        {SITE.phone && (
+          <a href={`tel:${SITE.phone}`}>
+            <span class="contact-label">手机</span><span>{SITE.phone}</span>
+          </a>
+        )}
+        {SITE.email && (
+          <a href={`mailto:${SITE.email}`}>
+            <span class="contact-label">邮箱</span><span>{SITE.email}</span>
+          </a>
+        )}
+      </address>
     </div>
   </section>
 

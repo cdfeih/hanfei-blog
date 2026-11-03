@@ -24,7 +24,8 @@ export const SITE = {
    * 联系方式：提供真实地址后填入；为空时页面隐藏入口（规格 D11）。
    * 例如：email: 'hanfei@example.com'，github: 'https://github.com/<username>'
    */
-  email: '277572023@qq.com',
+  phone: '18161293713',
+  email: 'hanfeilink@outlook.com',
   github: 'https://github.com/cdfeih',
   /**
    * 许可配置：分别声明网站代码与文章许可；留空则不在页脚宣称任何许可。
