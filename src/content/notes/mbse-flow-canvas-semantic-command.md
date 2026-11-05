@@ -3,7 +3,7 @@ title: 一个图元拖进画布后，模型里应该发生什么
 slug: mbse-flow-canvas-semantic-command
 description: 沿一次拖入部件的操作，拆开图形呈现、语义对象、草稿、提交和并发冲突，讨论图形、表格与 AI 如何共用一套模型修改规则。
 status: published
-publishedAt: 2026-11-5
+publishedAt: 2026-11-05
 topics:
   - modeling
   - frontend

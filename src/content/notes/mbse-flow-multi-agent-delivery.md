@@ -3,7 +3,7 @@ title: 多个 AI 一起开发，先把共享工作区和验收边界说清楚
 slug: mbse-flow-multi-agent-delivery
 description: 从 MBSE Flow 的实际研发接续出发，讨论依赖任务、共享契约、可变工作区与提交证据，说明多 AI 协作怎样留下可以继续开发和独立复核的结果。
 status: published
-publishedAt: 2026-11-5
+publishedAt: 2026-11-05
 topics:
   - architecture
   - management

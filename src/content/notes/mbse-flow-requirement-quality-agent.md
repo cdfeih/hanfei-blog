@@ -3,7 +3,7 @@ title: 让需求修改自动触发检查：工程 AI 的一条最小闭环
 slug: mbse-flow-requirement-quality-agent
 description: 从一次按需需求质量检查出发，说明固定上下文、版本化技能、结构化发现和事件触发如何协作，以及为什么检查完成、没有发现问题与工程验证通过必须分开。
 status: published
-publishedAt: 2026-11-5
+publishedAt: 2026-11-05
 topics:
   - modeling
   - architecture

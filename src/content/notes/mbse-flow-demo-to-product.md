@@ -3,7 +3,7 @@ title: 跑通热预算示例之后，工程软件还缺什么
 slug: mbse-flow-demo-to-product
 description: 从一次只有三项功率的研究示例出发，记录我如何重新判断MBSE Flow的产品边界：入口、工况、参数角色、变更决定，以及示例通过究竟证明了什么。
 status: published
-publishedAt: 2026-11-5
+publishedAt: 2026-11-05
 topics:
   - modeling
   - architecture
